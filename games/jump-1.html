@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浮遊プラットフォームジャンプ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* ダークな背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #e2e8f0;
+        }
+        canvas {
+            background-color: #2d3748; /* キャンバスの背景色 */
+            display: block;
+            border-radius: 1rem; /* 角を丸く */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5); /* 影 */
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            max-width: 90vw; /* 画面幅の90% */
+            max-height: 80vh; /* 画面高さの80% */
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background-color: #2d3748;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.7);
+            position: relative; /* スコアとハイスコア配置のため */
+            padding-top: 3.5rem; /* スコア表示エリアのために上部に余白を確保 */
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .control-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4299e1; /* 青色のボタン */
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .control-button:hover {
+            background-color: #3182ce;
+            transform: translateY(-2px);
+        }
+        .control-button:active {
+            background-color: #2b6cb0;
+            transform: translateY(0);
+        }
+        #score-display {
+            font-size: 1.5rem;
+            color: #a0aec0; /* 薄い灰色 */
+            position: absolute; /* 絶対配置に変更 */
+            top: 1rem; /* 上からの距離 */
+            left: 1rem; /* 左からの距離 */
+            background-color: rgba(45, 55, 72, 0.8); /* 背景を少し透明にして読みやすく */
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #high-score-display { /* ハイスコア表示用のスタイル */
+            font-size: 1.25rem;
+            color: #ecc94b; /* 黄色 */
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(45, 55, 72, 0.8); /* 背景を少し透明にして読みやすく */
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #message-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: none; /* 初期は非表示 */
+            z-index: 100;
+        }
+        #message-box button {
+            margin-top: 1rem;
+            padding: 0.75rem 2rem;
+            background-color: #48bb78; /* 緑色のボタン */
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        #message-box button:hover {
+            background-color: #38a169;
+            transform: translateY(-2px);
+        }
+        #message-box button:active {
+            background-color: #2f855a;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="score-display">スコア: 0</div>
+        <div id="high-score-display">ハイスコア: 0</div> <!-- ハイスコア表示要素を追加 -->
+        <canvas id="gameCanvas"></canvas>
+        <div class="controls">
+            <button id="leftButton" class="control-button">←</button>
+            <button id="jumpButton" class="control-button">↑</button>
+            <button id="rightButton" class="control-button">→</button>
+        </div>
+    </div>
+
+    <div id="message-box" class="message-box">
+        <h2 id="message-title" class="text-2xl font-bold mb-4"></h2>
+        <p id="message-content" class="text-lg mb-6"></p>
+        <button id="message-button"></button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score-display');
+        const highScoreDisplay = document.getElementById('high-score-display'); // ハイスコア表示要素を取得
+        const leftButton = document.getElementById('leftButton');
+        const jumpButton = document.getElementById('jumpButton');
+        const rightButton = document.getElementById('rightButton');
+        const messageBox = document.getElementById('message-box');
+        const messageTitle = document.getElementById('message-title');
+        const messageContent = document.getElementById('message-content');
+        const messageButton = document.getElementById('message-button');
+
+        // ゲームの設定
+        const GAME_WIDTH = 400;
+        const GAME_HEIGHT = 600;
+        const PLAYER_SIZE = 30;
+        const PLATFORM_WIDTH = 80;
+        const PLATFORM_HEIGHT = 15;
+        const GRAVITY = 0.5; // 重力
+        const JUMP_POWER = -12; // ジャンプ力
+        const PLAYER_SPEED = 5; // プレイヤーの移動速度
+        const PLATFORM_GAP_MIN = 80; // プラットフォーム間の最小垂直距離
+        const PLATFORM_GAP_MAX = 120; // プラットフォーム間の最大垂直距離
+        const INITIAL_PLATFORM_COUNT = 10; // 初期プラットフォーム数
+        const LEVEL_UP_SCORE = 1000; // このスコアに到達するごとに難易度アップ
+        const MAX_PLATFORM_SPEED = 2; // 動くプラットフォームの最大速度
+        const BREAKABLE_PLATFORM_LIFE = 60; // 消えるプラットフォームが残るフレーム数 (着地後)
+        const HIGHSCORE_KEY = 'platformer_highscore'; // localStorageのキー
+
+        // ゲームの状態変数
+        let player = {
+            x: GAME_WIDTH / 2 - PLAYER_SIZE / 2,
+            y: GAME_HEIGHT - PLAYER_SIZE - PLATFORM_HEIGHT,
+            dx: 0,
+            dy: 0,
+            onGround: false
+        };
+        let platforms = [];
+        let obstacles = [];
+        let items = [];
+        let score = 0;
+        let highScore = 0; // ハイスコア変数を追加
+        let cameraY = 0; // カメラの垂直スクロールオフセット
+        let lastPlatformY = GAME_HEIGHT - PLATFORM_HEIGHT;
+        let gameOver = false;
+        let gameRunning = false;
+        let platformSpeedMultiplier = 1; // プラットフォームの動きの速さの乗数
+        let breakablePlatformChance = 0.1; // 消えるプラットフォームの出現確率
+        let movingPlatformChance = 0.2; // 動くプラットフォームの出現確率
+        let obstacleChance = 0.05; // 障害物の出現確率
+        let itemChance = 0.03; // アイテムの出現確率
+
+        // 画像のプリロード（プレイヤー）
+        const playerImage = new Image();
+        playerImage.src = 'https://placehold.co/30x30/4299e1/ffffff?text=P'; // プレイヤーのプレースホルダー画像
+        playerImage.onerror = () => console.error("プレイヤー画像の読み込みに失敗しました。");
+
+        // ハイスコアの読み込み
+        function loadHighScore() {
+            const storedHighScore = localStorage.getItem(HIGHSCORE_KEY);
+            highScore = storedHighScore ? parseInt(storedHighScore, 10) : 0;
+            highScoreDisplay.textContent = `ハイスコア: ${highScore}`;
+        }
+
+        // ハイスコアの保存
+        function saveHighScore(newScore) {
+            if (newScore > highScore) {
+                highScore = newScore;
+                localStorage.setItem(HIGHSCORE_KEY, highScore.toString());
+                highScoreDisplay.textContent = `ハイスコア: ${highScore}`;
+            }
+        }
+
+        // 初期化
+        function initializeGame() {
+            canvas.width = GAME_WIDTH;
+            canvas.height = GAME_HEIGHT;
+
+            player.x = GAME_WIDTH / 2 - PLAYER_SIZE / 2;
+            player.y = GAME_HEIGHT - PLAYER_SIZE - PLATFORM_HEIGHT;
+            player.dx = 0;
+            player.dy = 0;
+            player.onGround = false;
+
+            platforms = [];
+            obstacles = [];
+            items = [];
+            score = 0;
+            cameraY = 0;
+            lastPlatformY = GAME_HEIGHT - PLATFORM_HEIGHT;
+            gameOver = false;
+            gameRunning = true;
+            platformSpeedMultiplier = 1;
+            breakablePlatformChance = 0.1;
+            movingPlatformChance = 0.2;
+            obstacleChance = 0.05;
+            itemChance = 0.03;
+
+            // 初期プラットフォームの生成
+            // 最初のプラットフォームは固定
+            platforms.push({
+                x: GAME_WIDTH / 2 - PLATFORM_WIDTH / 2,
+                y: GAME_HEIGHT - PLATFORM_HEIGHT,
+                width: PLATFORM_WIDTH,
+                height: PLATFORM_HEIGHT,
+                type: 'normal',
+                dx: 0, // 動くプラットフォーム用
+                life: -1, // 消えるプラットフォーム用 (使用しないか、常にアクティブ)
+                isTriggered: false // 消えるプラットフォームが着地によりトリガーされたか
+            });
+
+            for (let i = 0; i < INITIAL_PLATFORM_COUNT; i++) {
+                generatePlatform();
+            }
+
+            scoreDisplay.textContent = `スコア: ${score}`;
+            loadHighScore(); // ゲーム開始時にハイスコアを読み込む
+            hideMessageBox();
+            gameLoop(); // ゲームループ開始
+        }
+
+        // メッセージボックス表示
+        function showMessageBox(title, content, buttonText, buttonAction) {
+            messageTitle.textContent = title;
+            messageContent.textContent = content;
+            messageButton.textContent = buttonText;
+            messageButton.onclick = buttonAction;
+            messageBox.style.display = 'block';
+        }
+
+        // メッセージボックス非表示
+        function hideMessageBox() {
+            messageBox.style.display = 'none';
+        }
+
+        // プラットフォーム生成
+        function generatePlatform() {
+            const minX = 0;
+            const maxX = GAME_WIDTH - PLATFORM_WIDTH;
+            const y = lastPlatformY - (Math.random() * (PLATFORM_GAP_MAX - PLATFORM_GAP_MIN) + PLATFORM_GAP_MIN);
+            const x = Math.random() * (maxX - minX) + minX;
+
+            let type = 'normal';
+            let dx = 0;
+            let life = -1;
+            let isTriggered = false;
+
+            if (Math.random() < breakablePlatformChance) {
+                type = 'breakable';
+                life = BREAKABLE_PLATFORM_LIFE; // 最初はライフ満タン
+                isTriggered = false; // まだトリガーされていない
+            } else if (Math.random() < movingPlatformChance) {
+                type = 'moving';
+                dx = (Math.random() < 0.5 ? 1 : -1) * (1 + Math.random() * MAX_PLATFORM_SPEED) * platformSpeedMultiplier;
+            }
+
+            platforms.push({ x, y, width: PLATFORM_WIDTH, height: PLATFORM_HEIGHT, type, dx, life, isTriggered });
+            lastPlatformY = y;
+
+            // 障害物またはアイテムの生成（新しいプラットフォームの上）
+            if (Math.random() < obstacleChance) {
+                obstacles.push({
+                    x: x + PLATFORM_WIDTH / 2 - 10, // 障害物サイズを考慮
+                    y: y - 20, // プラットフォームの上に配置
+                    size: 20,
+                    type: 'spike' // 障害物の種類
+                });
+            } else if (Math.random() < itemChance) {
+                items.push({
+                    x: x + PLATFORM_WIDTH / 2 - 10, // アイテムサイズを考慮
+                    y: y - 20, // プラットフォームの上に配置
+                    size: 20,
+                    type: 'jump_boost', // アイテムの種類
+                    collected: false
+                });
+            }
+        }
+
+        // プレイヤーの更新
+        function updatePlayer() {
+            player.dy += GRAVITY; // 重力適用
+            player.x += player.dx;
+            player.y += player.dy;
+
+            // 画面左右の境界チェック
+            if (player.x < 0) player.x = 0;
+            if (player.x + PLAYER_SIZE > GAME_WIDTH) player.x = GAME_WIDTH - PLAYER_SIZE;
+
+            // カメラのスクロール (プレイヤーが画面中央より上に移動したらカメラを調整)
+            // プレイヤーが画面の約60%の高さに留まるようにする
+            const playerScreenTargetY = GAME_HEIGHT * 0.6; 
+            
+            // プレイヤーの論理Y座標 (上に行くほど値が小さくなる) を画面上の表示に変換
+            // cameraY は、世界全体をどれだけ下へシフトさせるかのオフセット
+            // player.y + cameraY が現在のプレイヤーの画面上のY座標になる
+            if (player.y + cameraY < playerScreenTargetY) {
+                // プレイヤーが目標位置より上に行ってしまったら、cameraY を増やすことで世界全体を下に引っ張る
+                cameraY = playerScreenTargetY - player.y;
+            }
+            
+            // スコアはカメラがどれだけスクロールしたかで計算
+            // cameraYが増加する（プレイヤーが上に移動する）ほどスコアが増える
+            score = Math.max(score, Math.floor(cameraY / 10));
+            scoreDisplay.textContent = `スコア: ${score}`;
+
+            // ゲームオーバー判定 (落下)
+            // player.y + cameraY が画面の最下部を超えたらゲームオーバー
+            if (player.y + cameraY > GAME_HEIGHT) {
+                gameOver = true;
+                gameRunning = false;
+                saveHighScore(score); // ゲームオーバー時にハイスコアを保存
+                showMessageBox(
+                    "ゲームオーバー！",
+                    `スコア: ${score}\n\n残念！また挑戦してね！`,
+                    "もう一度プレイ",
+                    initializeGame
+                );
+            }
+        }
+
+        // プラットフォームの更新
+        function updatePlatforms() {
+            platforms.forEach(platform => {
+                // 動くプラットフォームのロジック
+                if (platform.type === 'moving') {
+                    platform.x += platform.dx;
+                    if (platform.x < 0 || platform.x + platform.width > GAME_WIDTH) {
+                        platform.dx *= -1; // 壁に当たったら反転
+                    }
+                }
+                // 消えるプラットフォームのロジック
+                if (platform.type === 'breakable' && platform.isTriggered && platform.life > 0) {
+                    platform.life--; // トリガーされたらライフを減らす
+                }
+            });
+
+            // 画面外に出たプラットフォーム、またはライフが尽きた消えるプラットフォームを削除し、新しいプラットフォームを生成
+            platforms = platforms.filter(platform => {
+                const isOffScreen = platform.y + cameraY > GAME_HEIGHT + PLATFORM_HEIGHT;
+                const isBreakableAndExpired = platform.type === 'breakable' && platform.life <= 0;
+                return !(isOffScreen || isBreakableAndExpired);
+            });
+
+            // 画面上部から新しいプラットフォームを生成し続ける (lastPlatformY + cameraY が -100 を超える間)
+            while (platforms.length < INITIAL_PLATFORM_COUNT + 5 && lastPlatformY + cameraY > -100) { 
+                generatePlatform();
+            }
+        }
+
+        // 衝突判定
+        function checkCollisions() {
+            player.onGround = false;
+
+            platforms.forEach(platform => {
+                // プレイヤーの足元がプラットフォームより上で、次のフレームでプラットフォームに到達する場合
+                if (
+                    player.dy > 0 && // 落下中のみ
+                    player.x < platform.x + platform.width &&
+                    player.x + PLAYER_SIZE > platform.x &&
+                    player.y + PLAYER_SIZE < platform.y + PLATFORM_HEIGHT && 
+                    player.y + PLAYER_SIZE + player.dy >= platform.y 
+                ) {
+                    // 消えるプラットフォームでも、まだライフが残っていてトリガーされていない場合のみ着地可能
+                    if (platform.type !== 'breakable' || (platform.type === 'breakable' && platform.life > 0)) {
+                        player.y = platform.y - PLAYER_SIZE; // プラットフォームの上に配置
+                        player.dy = 0; // 垂直速度を0に
+                        player.onGround = true;
+
+                        if (platform.type === 'breakable' && !platform.isTriggered) {
+                            platform.isTriggered = true; // 消えるプラットフォームに着地したらトリガー
+                        }
+                    }
+                }
+            });
+
+            // 障害物との衝突
+            obstacles.forEach(obstacle => {
+                if (
+                    player.x < obstacle.x + obstacle.size &&
+                    player.x + PLAYER_SIZE > obstacle.x &&
+                    player.y < obstacle.y + obstacle.size &&
+                    player.y + PLAYER_SIZE > obstacle.y
+                ) {
+                    gameOver = true;
+                    gameRunning = false;
+                    saveHighScore(score); // ゲームオーバー時にハイスコアを保存
+                    showMessageBox(
+                        "ゲームオーバー！",
+                        `スコア: ${score}\n\n障害物に触れてしまいました！`,
+                        "もう一度プレイ",
+                        initializeGame
+                    );
+                }
+            });
+
+            // アイテムとの衝突
+            items = items.filter(item => {
+                if (!item.collected &&
+                    player.x < item.x + item.size &&
+                    player.x + PLAYER_SIZE > item.x &&
+                    player.y < item.y + item.size &&
+                    player.y + PLAYER_SIZE > item.y
+                ) {
+                    // アイテム取得！効果を適用
+                    if (item.type === 'jump_boost') {
+                        player.dy = JUMP_POWER * 1.5; // ジャンプ力アップ
+                    }
+                    // その他のアイテム効果をここに追加
+                    return false; // アイテムを削除
+                }
+                return true; // アイテムを残す
+            });
+        }
+
+        // 難易度調整
+        function adjustDifficulty() {
+            // スコアがLEVEL_UP_SCOREの倍数に達した場合のみ難易度を上げる
+            if (score > 0 && score % LEVEL_UP_SCORE === 0 && score !== lastAdjustedScore) { // lastAdjustedScoreで重複実行を防ぐ
+                platformSpeedMultiplier += 0.2;
+                breakablePlatformChance = Math.min(0.4, breakablePlatformChance + 0.05);
+                movingPlatformChance = Math.min(0.5, movingPlatformChance + 0.05);
+                obstacleChance = Math.min(0.2, obstacleChance + 0.02);
+                itemChance = Math.min(0.1, itemChance + 0.01);
+                console.log("難易度アップ！", { platformSpeedMultiplier, breakablePlatformChance, movingPlatformChance, obstacleChance, itemChance });
+                lastAdjustedScore = score; // 最後に難易度を調整したスコアを記録
+            }
+        }
+        let lastAdjustedScore = 0; // 難易度調整の重複実行を防ぐための変数
+
+        // 描画
+        function draw() {
+            ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+            // プラットフォームの描画
+            platforms.forEach(platform => {
+                let platformColor;
+                if (platform.type === 'moving') {
+                    platformColor = '#9f7aea'; // 紫
+                } else if (platform.type === 'breakable') {
+                    // ライフに応じて色を変化させる（消える前の警告色）
+                    if (platform.isTriggered) {
+                        const alpha = platform.life / BREAKABLE_PLATFORM_LIFE; // ライフの割合で透明度を設定
+                        platformColor = `rgba(229, 62, 62, ${alpha})`; // 赤から透明に
+                    } else {
+                        platformColor = '#fc8181'; // 初期は薄い赤
+                    }
+                } else {
+                    platformColor = '#4fd1c5'; // シアン
+                }
+                
+                ctx.fillStyle = platformColor;
+                ctx.beginPath();
+                // 角丸にする
+                const radius = 5;
+                ctx.moveTo(platform.x + radius, platform.y + cameraY); // cameraY を加算
+                ctx.lineTo(platform.x + platform.width - radius, platform.y + cameraY); // cameraY を加算
+                ctx.arcTo(platform.x + platform.width, platform.y + cameraY, platform.x + platform.width, platform.y + cameraY + radius, radius); // cameraY を加算
+                ctx.lineTo(platform.x + platform.width, platform.y + cameraY + platform.height - radius); // cameraY を加算
+                ctx.arcTo(platform.x + platform.width, platform.y + cameraY + platform.height, platform.x + platform.width - radius, platform.y + cameraY + platform.height, radius); // cameraY を加算
+                ctx.lineTo(platform.x + radius, platform.y + cameraY + platform.height); // cameraY を加算
+                ctx.arcTo(platform.x, platform.y + cameraY + platform.height, platform.x, platform.y + cameraY + platform.height - radius, radius); // cameraY を加算
+                ctx.lineTo(platform.x, platform.y + cameraY + radius); // cameraY を加算
+                ctx.arcTo(platform.x, platform.y + cameraY, platform.x + radius, platform.y + cameraY, radius); // cameraY を加算
+                ctx.closePath();
+                ctx.fill();
+            });
+
+            // 障害物の描画 (トゲのシンプルなSVG風)
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = '#e53e3e'; // 赤
+                ctx.beginPath();
+                ctx.moveTo(obstacle.x - 5, obstacle.y + cameraY + obstacle.size); // cameraY を加算
+                ctx.lineTo(obstacle.x + obstacle.size / 2, obstacle.y + cameraY); // cameraY を加算
+                ctx.lineTo(obstacle.x + obstacle.size + 5, obstacle.y + cameraY + obstacle.size); // cameraY を加算
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#a0aec0'; // トゲの先端
+                ctx.beginPath();
+                ctx.moveTo(obstacle.x + obstacle.size / 2 - 3, obstacle.y + cameraY + obstacle.size - 5); // cameraY を加算
+                ctx.lineTo(obstacle.x + obstacle.size / 2, obstacle.y + cameraY - 5); // cameraY を加算
+                ctx.lineTo(obstacle.x + obstacle.size / 2 + 3, obstacle.y + cameraY + obstacle.size - 5); // cameraY を加算
+                ctx.closePath();
+                ctx.fill();
+            });
+
+            // アイテムの描画 (☆のシンプルなSVG風)
+            items.forEach(item => {
+                if (!item.collected) {
+                    ctx.fillStyle = item.type === 'jump_boost' ? '#ecc94b' : '#a0aec0'; // 黄色 or 灰色
+                    const cx = item.x + item.size / 2;
+                    const cy = item.y + cameraY + item.size / 2; // cameraY を加算
+                    const outerRadius = item.size / 2;
+                    const innerRadius = outerRadius / 2;
+                    const numPoints = 5;
+
+                    ctx.beginPath();
+                    for (let i = 0; i < numPoints * 2; i++) {
+                        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                        const angle = (Math.PI / numPoints) * i;
+                        const x = cx + radius * Math.sin(angle);
+                        const y = cy - radius * Math.cos(angle);
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+
+            // プレイヤーの描画
+            ctx.drawImage(playerImage, player.x, player.y + cameraY, PLAYER_SIZE, PLAYER_SIZE); // cameraY を加算
+        }
+
+        // ゲームループ
+        function gameLoop() {
+            if (gameOver || !gameRunning) return;
+
+            updatePlayer();
+            updatePlatforms();
+            checkCollisions();
+            adjustDifficulty(); // 難易度調整をゲームループ内で定期的にチェック
+
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // イベントリスナー
+        // キーボード操作
+        document.addEventListener('keydown', (e) => {
+            if (gameRunning) {
+                if (e.key === 'ArrowLeft' || e.key === 'a') {
+                    player.dx = -PLAYER_SPEED;
+                } else if (e.key === 'ArrowRight' || e.key === 'd') {
+                    player.dx = PLAYER_SPEED;
+                } else if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') && player.onGround) {
+                    player.dy = JUMP_POWER;
+                    player.onGround = false;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (gameRunning) {
+                if ((e.key === 'ArrowLeft' || e.key === 'a') && player.dx < 0) {
+                    player.dx = 0;
+                } else if ((e.key === 'ArrowRight' || e.key === 'd') && player.dx > 0) {
+                    player.dx = 0;
+                }
+            }
+        });
+
+        // ボタン操作
+        leftButton.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // スクロール防止
+            if (gameRunning) player.dx = -PLAYER_SPEED;
+        });
+        leftButton.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (gameRunning && player.dx < 0) player.dx = 0;
+        });
+        leftButton.addEventListener('mousedown', () => {
+            if (gameRunning) player.dx = -PLAYER_SPEED;
+        });
+        leftButton.addEventListener('mouseup', () => {
+            if (gameRunning && player.dx < 0) player.dx = 0;
+        });
+        leftButton.addEventListener('mouseleave', () => { // マウスがボタンから離れた時
+            if (gameRunning && player.dx < 0) player.dx = 0;
+        });
+
+        rightButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameRunning) player.dx = PLAYER_SPEED;
+        });
+        rightButton.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (gameRunning && player.dx > 0) player.dx = 0;
+        });
+        rightButton.addEventListener('mousedown', () => {
+            if (gameRunning) player.dx = PLAYER_SPEED;
+        });
+        rightButton.addEventListener('mouseup', () => {
+            if (gameRunning && player.dx > 0) player.dx = 0;
+        });
+        rightButton.addEventListener('mouseleave', () => {
+            if (gameRunning && player.dx > 0) player.dx = 0;
+        });
+
+        jumpButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameRunning && player.onGround) {
+                player.dy = JUMP_POWER;
+                player.onGround = false;
+            }
+        });
+        jumpButton.addEventListener('click', () => {
+            if (gameRunning && player.onGround) {
+                player.dy = JUMP_POWER;
+                player.onGround = false;
+            }
+        });
+
+        // 画面サイズ変更時にキャンバスを調整
+        window.addEventListener('resize', () => {
+            // 特にキャンバスの幅や高さは固定値で定義しているので、
+            // リサイズ時にキャンバスのスタイル調整が必要な場合はここに記述します。
+            // 現在はmax-widthとmax-heightでCSSで対応しています。
+        });
+
+
+        // ゲーム開始
+        window.onload = function() {
+            loadHighScore(); // 初期ロード時にハイスコアを読み込む
+            showMessageBox(
+                "浮遊プラットフォームジャンプ",
+                "空中に浮かぶ床をジャンプで登り続けよう！\n\n矢印キーまたは画面下のボタンで操作。\n動く床、消える床、障害物、アイテムに注意！",
+                "ゲームスタート！",
+                initializeGame
+            );
+        };
+    </script>
+</body>
+</html>
