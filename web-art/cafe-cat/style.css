@@ -1,0 +1,228 @@
+/* 全体の背景と中央配置 */
+body {
+    background-color: #e8e8e8; /* 少し明るくしました */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* アート全体のコンテナ */
+.scene {
+    position: relative;
+    width: 400px;
+    height: 300px;
+    background-color: #f7f7f7; /* お店の壁の色 */
+    border: 8px solid #333;
+    border-radius: 10px;
+}
+
+/* --- 背景の要素 --- */
+.cupboard {
+    position: absolute;
+    z-index: 1; /* 重なり順を一番下に */
+    top: 30px;
+    right: 20px;
+    width: 100px;
+    height: 140px;
+    background-color: #bfbfbf;
+    border: 3px solid #333;
+    border-radius: 5px;
+}
+.cupboard .door {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    border: 1px solid #333;
+}
+.cupboard .door.left { left: 0; }
+.cupboard .door.right { right: 0; }
+
+/* 時計のスタイリングとアニメーション */
+.clock {
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+    left: 40px;
+    width: 70px;
+    height: 70px;
+    background-color: white;
+    border: 5px solid #333;
+    border-radius: 50%;
+}
+.clock-hand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #333;
+    transform-origin: bottom;
+}
+.minute-hand {
+    width: 3px;
+    height: 28px;
+    margin-top: -28px;
+    animation: ticktock 60s linear infinite; /* 60秒で一周 */
+}
+.hour-hand {
+    width: 3px;
+    height: 20px;
+    margin-top: -20px;
+    transform: rotate(210deg); /* 針の位置を固定 */
+}
+
+@keyframes ticktock {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/* --- 手前の要素 --- */
+.counter {
+    position: absolute;
+    z-index: 10; /* 重なり順を手前に */
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #333;
+}
+
+/* ネコのスタイリング (z-index追加) */
+.cat {
+    position: absolute;
+    z-index: 11;
+    bottom: 55px;
+    left: 80px;
+    width: 100px;
+    height: 100px;
+}
+.cat .body {
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 60px;
+    background-color: black;
+    border-radius: 50% 50% 0 0;
+}
+.cat .face {
+    position: absolute;
+    bottom: 50px;
+    left: 14px;
+    width: 70px;
+    height: 60px;
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 50%;
+}
+
+/* ▼▼▼ ネコの耳の修正 ▼▼▼ */
+.cat .ear {
+    position: absolute;
+    top: -10px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 20px solid black;
+}
+.cat .ear.left { left: -10px; 
+    transform: rotate(-40deg);}
+.cat .ear.right { right: -10px; 
+    transform: rotate(40deg);}
+/* ▲▲▲ ネコの耳の修正 ▲▲▲ */
+
+
+.cat .eye {
+    position: absolute;
+    top: 25px;
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 50%;
+}
+.cat .eye.left { left: 20px; }
+.cat .eye.right { right: 20px; }
+
+.cat .nose {
+    position: absolute;
+    top: 35px;
+    left: 31px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid black;
+}
+
+.cat .mouth {
+    position: absolute;
+    top: 30px;
+    width: 10px;
+    height: 10px;
+    border-bottom: 1.5px solid black;
+    border-radius: 50%;
+}
+.cat .mouth.left { left: 26px; }
+.cat .mouth.right { right: 26px; }
+
+/* コーヒーカップのスタイリング (z-index追加) */
+.coffee-cup {
+    position: absolute;
+    z-index: 11;
+    bottom: 25px;
+    right: 130px;
+}
+.cup {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background-color: white;
+    border: 4px solid #333;
+    border-radius: 0 0 35px 35px;
+}
+.handle {
+    position: relative;
+    top: -4px;
+    right: -40px;
+    width: 7px;
+    height: 11px;
+    background-color: white;
+    border: 4px solid #333;
+    border-radius: 0 10px 10px 0;
+}
+.saucer {
+    width: 60px;
+    height: 7px;
+    background-color: white;
+    border: 4px solid #333;
+    border-radius: 50%;
+    margin-left: -11px;
+    margin-top: -5px;
+}
+
+/* 湯気のアニメーション定義 */
+@keyframes rise {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+.steam {
+    position: absolute;
+    width: 4px;
+    height: 15px;
+    background-color: #ccc;
+    border-radius: 2px;
+    left: 7px;
+    bottom: 30px;
+    animation: rise 3s infinite;
+}
+.steam-1 { animation-delay: 0s; }
+.steam-2 { left: 16px; animation-delay: 1s; }
+.steam-3 { left: 30px; animation-delay: 2s; }
