@@ -1,0 +1,39 @@
+/* 顔の輪郭 (face) */
+.face {
+    width: 200px;           /* 幅 */
+    height: 200px;          /* 高さ */
+    background-color: #f0c9a9; /* 背景色（肌色） */
+    border-radius: 50%;     /* 角を丸くして円にする */
+    position: relative;     /* 部品を配置する基準点にする */
+}
+
+/* 目 (eye) */
+.eye {
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;     /* 顔の中心を基準に配置 */
+    top: 60px;              /* 上から60pxの位置 */
+}
+
+/* 左目 (left) */
+.left {
+    left: 40px;             /* 左から40pxの位置 */
+}
+
+/* 右目 (right) */
+.right {
+    right: 40px;            /* 右から40pxの位置 */
+}
+
+/* 口 (mouth) */
+.mouth {
+    width: 80px;
+    height: 40px;
+    border: 5px solid black; /* 黒い線で描く */
+    border-radius: 0 0 40px 40px; /* 下半分が丸くなるように */
+    position: absolute;
+    bottom: 40px;           /* 下から40pxの位置 */
+    left: 55px;             /* 左から55pxの位置 */
+}
