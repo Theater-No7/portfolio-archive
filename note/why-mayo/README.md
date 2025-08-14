@@ -1,5 +1,3 @@
-2
-
 ![メニュー](https://assets.st-note.com/production/uploads/images/188936186/profile_a5874f3ecb89cd5b3b42b6f2d7d417d5.jpeg?fit=bounds&format=jpeg&quality=85&width=330)
 
  投稿
