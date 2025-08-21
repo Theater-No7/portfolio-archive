@@ -96,6 +96,23 @@ AIのサポートを受けながら、以下の技術を用いた開発に挑戦
 
 ---
 
+### 🔗 連携SNS
+<p>
+  <a href="https://x.com/Theater_No7" target="_blank">
+    <img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" />
+  </a>
+  <a href="https://www.youtube.com/channel/UCtML0_iVZaQIfCFRuTnHLMA" target="_blank">
+    <img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube" />
+  </a>
+  <a href="https://note.com/theater_no7" target="_blank">
+    <img src="https://img.shields.io/badge/note-41C9B4?style=for-the-badge&logo=note&logoColor=white" alt="note" />
+  </a>
+</p>
+
+※ Youtubeは活動予定の段階です
+
+---
+
 ### ✨ Fun Fact
 
 人の髪型の変化にすぐ気づくことができます。
