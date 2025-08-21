@@ -55,13 +55,21 @@ AIのサポートを受けながら、以下の技術を用いた開発に挑戦
 
 ---
 
+### 📜 Certifications
+
+- ITパスポート試験 (IP)
+- TOEIC Listening & Reading Test: 755点
+- 実用英語技能検定 2級 (EIKEN Grade 2)
+
+---
+
 ### 💖 Interests
 
 <details>
 <summary>もっと詳しく見る</summary>
 
 - **🏹 弓道 (Kyudo):**
-  - 経験10年以上、二段です。大学でサークルを立ち上げたのは最高の思い出です。
+  - 経験10年以上、弍段です。大学でサークルを立ち上げたのは最高の思い出です。
 
 - **🎸 音楽 (Music):**
   - ベースを弾きます。Ed SheeranやMaroon 5からJ-POPまで幅広く聴きます。
