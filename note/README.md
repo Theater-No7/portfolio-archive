@@ -1,4 +1,4 @@
-# note活動のリポジトリ
+# 📓 note活動のリポジトリ
 趣味兼メディア運営の練習として、noteで発信活動をしています。  
 その時々の自分の興味や、「これならビュー稼げそう」と思ったテーマを書いています。
 好きな拡張子は「.md」です。  
@@ -7,7 +7,7 @@
 
 Git管理の練習にもしています。  
 
-## 常用ツール
+## 🧰 常用ツール
 
 ↓記事を画像ごとマークダウン形式でコピーできるChrome拡張機能↓  
 [【Copy as markdown】](https://chromewebstore.google.com/detail/copy-as-markdown/fkeaekngjflipcockcnpobkpbbfbhmdn?hl=ja)
