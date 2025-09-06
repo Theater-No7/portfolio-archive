@@ -1,0 +1,84 @@
+/* === 基本設定と背景 === */
+/* 全ての要素に適用するおまじない */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif; /* 読みやすいフォントを指定 */
+    background-color: #f0f2f5; /* 背景を少しだけ灰色に */
+    
+    /* 魔法の呪文：中身を上下左右中央揃えにする */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 画面の高さいっぱいに広げる */
+}
+
+/* === アプリ全体の白いカード === */
+.container {
+    background-color: #ffffff; /* 背景を白に */
+    padding: 40px; /* 内側の余白 */
+    border-radius: 10px; /* 角を丸くする */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* ふんわりした影をつける */
+    width: 600px; /* カードの幅を固定 */
+    text-align: center; /* 中身の要素を中央揃えに */
+}
+
+/* === ヘッダーのタイトル === */
+header h1 {
+    font-size: 28px; /* 文字の大きさ */
+    color: #333; /* 文字の色 */
+    margin-bottom: 30px; /* 下に余白を設ける */
+}
+
+/* === テキスト入力エリア === */
+#text-input {
+    width: 100%; /* 親要素の幅いっぱいに広げる */
+    height: 150px; /* 高さを指定 */
+    padding: 15px; /* 内側の余白 */
+    border: 1px solid #ddd; /* 薄い灰色の枠線 */
+    border-radius: 8px; /* 角を丸くする */
+    font-size: 16px; /* 文字の大きさ */
+    margin-bottom: 20px; /* 下に余白 */
+}
+
+/* === 要約ボタン === */
+#submit-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold; /* 文字を太く */
+    color: #ffffff; /* 文字を白に */
+    background-color: #007bff; /* 背景を青色に */
+    border: none; /* 枠線を消す */
+    border-radius: 8px;
+    cursor: pointer; /* マウスカーソルを指の形に */
+    transition: background-color 0.3s; /* 背景色が滑らかに変わるアニメーション */
+}
+
+/* ボタンにマウスが乗った時のスタイル */
+#submit-button:hover {
+    background-color: #0056b3; /* 少し濃い青色に */
+}
+
+/* === 結果表示エリア === */
+h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 20px;
+}
+
+#result-output {
+    width: 100%;
+    height: 150px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9; /* 少しだけ背景色をつける */
+    text-align: left; /* 文字を左揃えに */
+    color: #333;
+}
