@@ -1,19 +1,22 @@
 {
-  "hosting": {
-    "public": "artisan-palette-app/public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
   "functions": {
     "source": "functions"
-  }
+  },
+  "hosting": [
+    {
+      "target": "hub",
+      "public": "hub/public",
+      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+    },
+    {
+      "target": "summarizer-app",
+      "public": "summarizer-app/public",
+      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+    },
+    {
+      "target": "artisan-palette-app",
+      "public": "artisan-palette-app/public",
+      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+    }
+  ]
 }
