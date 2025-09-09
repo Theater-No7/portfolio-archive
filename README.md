@@ -4,6 +4,27 @@
 学問で得た知見を活かし、人が直感的に使いやすいWebサービスを作りたいという想いから、Web技術やSEOに興味を持っています。長期インターンではオウンドメディア運営に携わっています。    
 **「面白い」と思ったことは、とりあえず触って形にしてみるのが好きです。**
 
+### 🚀 ポートフォリオサイト (Portfolio)
+
+アイデア出しからデザイン、コーディングまで、学んだ技術を活かしたWebアプリ開発のポートフォリオサイトを製作中です。
+ぜひご覧いただけますと幸いです！
+
+<p align="center">
+  <a href="https://theater-no7.web.app/" target="_blank" style="display: inline-block; padding: 12px 24px; font-size: 16px; font-weight: bold; color: #ffffff; background-color: #41C9B4; border-radius: 25px; text-decoration: none; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#36a895'" onmouseout="this.style.backgroundColor='#41C9B4'">
+    🚀 My Portfolio Site
+  </a>
+</p>
+
+<details>
+<summary>使用技術など</summary>
+<p>
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
+</p>
+</details>
+
 ---
 
 ### 💻 Tools & Technologies
