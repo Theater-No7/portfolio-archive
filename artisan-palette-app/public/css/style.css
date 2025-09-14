@@ -125,3 +125,38 @@ header p {
     flex-direction: column;
     align-items: center;
 }
+
+/* ===【追記】ギャラリーへのリンク === */
+.gallery-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 700;
+    color: #4A90E2;
+    text-decoration: none;
+}
+.gallery-link:hover {
+    text-decoration: underline;
+}
+
+/* ===【追記】保存ボタン（サブボタン） === */
+.button-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 30px; /* 解説文との間に余白を追加 */
+}
+.button-secondary:hover {
+    background-color: #e0e0e0;
+}
+.button-secondary:disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+}
