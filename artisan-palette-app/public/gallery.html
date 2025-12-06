@@ -10,6 +10,13 @@
 <body>
     <div class="container">
         <header class="gallery-header">
+            <div id="auth-container">
+                <a href="/login.html" id="login-link" class="gallery-link">ログイン</a>
+                <div id="user-info" class="hidden">
+                    <span id="user-name"></span>
+                    <button id="logout-button" class="button-secondary">ログアウト</button>
+                </div>
+            </div>
             <h1>Palette Gallery</h1>
             <p>これまでに生成された美しい配色パレットの一覧です。</p>
             <a href="/" class="gallery-link">← パレット生成ページに戻る</a>
@@ -20,6 +27,6 @@
         </main>
     </div>
 
-    <script src="/js/gallery.js"></script>
+    <script type="module" src="/js/gallery.js"></script>
 </body>
 </html>

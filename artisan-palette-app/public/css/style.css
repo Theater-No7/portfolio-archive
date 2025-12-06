@@ -160,3 +160,17 @@ header p {
     color: #ccc;
     cursor: not-allowed;
 }
+
+/* ===【追記】認証状態表示エリア === */
+#auth-container {
+    text-align: right;
+    margin-bottom: 20px;
+    height: 30px; /* 高さを確保してレイアウト崩れを防ぐ */
+}
+#user-info span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+#logout-button {
+    padding: 5px 10px; /* 小さめのボタンにする */
+}

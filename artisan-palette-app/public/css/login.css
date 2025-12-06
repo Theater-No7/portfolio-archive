@@ -1,0 +1,85 @@
+/* ログインページ全体のレイアウト */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 中央のログインカード */
+.login-card {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 380px;
+}
+
+.login-card h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.welcome-message {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.description {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* Googleログインボタン */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.google-btn:hover {
+    background-color: #f9f9f9;
+    border-color: #ccc;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.attribution-footer {
+    position: absolute; /* 画面下部に固定 */
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+}
+
+.attribution-footer p,
+.attribution-footer a {
+    color: #aaa; /* 目立ちすぎないように薄い色に */
+    text-decoration: none;
+}
+
+.attribution-footer a:hover {
+    text-decoration: underline; /* マウスを乗せたら下線を出す */
+}

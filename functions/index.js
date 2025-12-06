@@ -2,22 +2,72 @@ const {onRequest} = require("firebase-functions/v2/https");
 const {log, error} = require("firebase-functions/logger");
 const fetch = require("node-fetch");
 const {defineString} = require("firebase-functions/params");
-
-// ★★★【追記1】★★★
-// Firestoreを操作するための機能をインポート
-const {getFirestore} = require("firebase-admin/firestore");
 const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
+const {getAuth} = require("firebase-admin/auth");
 
-// Firebase Admin SDKの初期化（ファイル内で一度だけ行います）
 initializeApp();
-
 const geminiKey = defineString("GEMINI_KEY");
 
-// 要約アプリ用関数 
+
+// ■■■ パレットを保存する関数（セキュリティ強化版） ■■■
+exports.savePalette = onRequest({cors: true}, async (req, res) => {
+  try {
+    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    if (!idToken) {
+      res.status(403).json({data: {error: {message: "認証されていません。"}}});
+      return;
+    }
+    const decodedToken = await getAuth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+
+    const paletteData = req.body.data;
+    paletteData.createdAt = new Date();
+    paletteData.userId = uid;
+
+    log("保存するパレットデータ:", paletteData);
+
+    const writeResult = await getFirestore().collection("palettes").add(paletteData);
+    res.json({data: {id: writeResult.id, message: "パレットを保存しました！"}});
+  } catch (err) {
+    error("パレットの保存エラー:", err);
+    res.status(500).json({data: {error: {message: "保存に失敗しました。"}}});
+  }
+});
+
+
+// ■■■ 保存したパレットを取得する関数（セキュリティ強化版） ■■■
+exports.getPalettes = onRequest({cors: true}, async (req, res) => {
+  try {
+    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    if (!idToken) {
+      res.status(403).json({data: {error: {message: "認証されていません。"}}});
+      return;
+    }
+    const decodedToken = await getAuth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+
+    const palettesSnapshot = await getFirestore()
+      .collection("palettes")
+      .where("userId", "==", uid)
+      .orderBy("createdAt", "desc")
+      .get();
+    
+    const palettes = [];
+    palettesSnapshot.forEach((doc) => {
+      palettes.push({id: doc.id, ...doc.data()});
+    });
+    res.json({data: palettes});
+  } catch (err) {
+    error("パレットの取得エラー:", err);
+    res.status(500).json({data: {error: {message: "データの取得に失敗しました。"}}});
+  }
+});
+
+
+// ■■■ 要約アプリ用関数 (認証不要) ■■■
 exports.summarizeText = onRequest({cors: true}, async (req, res) => {
   const modelName = "gemini-2.5-pro";
-  // ★★★【修正点3】★★★
-  // パラメータの値を使うには .value() を付けます
   const API_URL = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${geminiKey.value()}`;
   try {
     const inputText = req.body.data.text;
@@ -38,12 +88,10 @@ exports.summarizeText = onRequest({cors: true}, async (req, res) => {
   }
 });
 
-// パレット生成アプリ用関数
 
+// ■■■ パレット生成用関数 (認証不要) ■■■
 exports.generatePalette = onRequest({cors: true}, async (req, res) => {
   const modelName = "gemini-2.5-pro";
-  // ★★★【修正点4】★★★
-  // こちらも同様に .value() を付けてパラメータの値を使います
   const API_URL = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${geminiKey.value()}`;
   try {
     const themeText = req.body.data.text;
@@ -75,50 +123,5 @@ exports.generatePalette = onRequest({cors: true}, async (req, res) => {
   } catch (err) {
     error("エラーが発生しました:", err);
     res.status(500).json({data: {error: {message: "サーバーでエラーが発生しました。"}}});
-  }
-});
-
-// ★★★【追記2】パレットを保存するための新しい関数 ★★★
-exports.savePalette = onRequest({cors: true}, async (req, res) => {
-  try {
-    const paletteData = req.body.data;
-    // データに保存日時を追加
-    paletteData.createdAt = new Date();
-
-    log("保存するパレットデータ:", paletteData);
-
-    // Firestoreの'palettes'という場所に新しいデータを追加
-    const writeResult = await getFirestore()
-      .collection("palettes")
-      .add(paletteData);
-
-    // 成功したら、保存したデータのIDを返す
-    res.json({data: {id: writeResult.id, message: "パレットを保存しました！"}});
-
-  } catch (err) {
-    error("パレットの保存エラー:", err);
-    res.status(500).json({data: {error: {message: "保存に失敗しました。"}}});
-  }
-});
-
-// ★★★【追記3】保存したパレットを全て取得する新しい関数 ★★★
-exports.getPalettes = onRequest({cors: true}, async (req, res) => {
-  try {
-    const palettesSnapshot = await getFirestore()
-      .collection("palettes")
-      .orderBy("createdAt", "desc") // 新しいものが上に来るように並べ替え
-      .get();
-
-    const palettes = [];
-    palettesSnapshot.forEach((doc) => {
-      palettes.push({id: doc.id, ...doc.data()});
-    });
-
-    // 取得した全パレットのリストを返す
-    res.json({data: palettes});
-
-  } catch (err) {
-    error("パレットの取得エラー:", err);
-    res.status(500).json({data: {error: {message: "データの取得に失敗しました。"}}});
   }
 });

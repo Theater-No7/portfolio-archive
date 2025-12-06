@@ -4,34 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artisan Palette - AI Color Palette Generator</title>
+    <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/style.css?v=2">
 </head>
-<body>
+<body class="center-layout">
+
   <div class="container">
-      <header>
-          <h1>Artisan Palette</h1>
-          <p>AI Concept Color Palette Generator</p>
-          <a href="gallery.html" class="gallery-link">保存したパレットを見る →</a>
-      </header>
-
-      <main>
-        <div class="input-section">
-            <label for="theme-input">どのようなテーマの配色が見たいですか？</label>
-            <input type="text" id="theme-input" placeholder="例：雨上がりの紫陽花、サイバーパンクな東京の夜">
-            <button id="generate-button">パレットを生成する</button>
+    <header>
+      <div id="auth-container">
+        <a href="/login.html" id="login-link" class="gallery-link">ログイン</a>
+        <div id="user-info" class="hidden">
+          <span id="user-name"></span>
+          <button id="logout-button" class="button-secondary">ログアウト</button>
         </div>
+      </div>
+      <h1>Artisan Palette</h1>
+      <p>AI Concept Color Palette Generator</p>
+      <a href="/gallery.html" id="gallery-link" class="gallery-link">保存したパレットを見る →</a>
+    </header>
 
-        <div id="result-section" class="hidden">
-            <h2>AIが生成したカラーパレット</h2>
-            <div id="palette-container"></div>
-            
-            <button id="save-button" class="button-secondary">このパレットを保存する</button>
+    <main>
+      <div class="input-section">
+          <label for="theme-input">どのようなテーマの配色が見たいですか？</label>
+          <input type="text" id="theme-input" placeholder="例：雨上がりの紫陽花、サイバーパンクな東京の夜">
+          <button id="generate-button">パレットを生成する</button>
+      </div>
 
-            <h3>AIによるコンセプト解説</h3>
-            <div id="palette-explanation"></div>
-        </div>
-      </main>
+      <div id="result-section" class="hidden">
+          <h2>AIが生成したカラーパレット</h2>
+          <div id="palette-container"></div>
+          <button id="save-button" class="button-secondary">このパレットを保存する</button>
+          <h3>AIによるコンセプト解説</h3>
+          <div id="palette-explanation"></div>
+      </div>
+    </main>
   </div>
-  <script src="/js/main.js"></script>
+
+    <script type="module" src="/js/main.js"></script>
 </body>
 </html>
