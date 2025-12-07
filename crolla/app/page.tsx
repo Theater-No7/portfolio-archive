@@ -17,9 +17,25 @@ const translations = {
       login: "ログイン",
     },
     hero: {
-      headline: "プロダクトの進化に、コンテンツを置き去りにしない。",
+      headline: (
+        <>
+          手動更新は、もう終わり。
+          <br className="hidden md:block" />
+          Webコンテンツ自動同期AI
+          <br className="hidden md:block" />『 
+          {/* 👇 ここからロゴ画像に変更 */}
+          <span className="inline-block relative w-35 h-22 md:w-48 md:h-22 align-bottom ml-2 -mb-1 md:-mb-2 overflow-hidden">
+            <img 
+              src="/logo-full.png" 
+              alt="Crolla" 
+              className="absolute inset-0 w-full h-full object-cover" 
+            />
+          </span>{/* 👆 ここまで */}&nbsp;』
+        </>
+      ),
+      // 👇 ビジネスメリットを強調したサブコピー
       subheadline:
-        "アジャイル時代のWeb整合性管理AI。仕様変更に伴うリライトからリンク切れ修復まで、サイトを常に「最新」へ。",
+        "プロダクトの進化に合わせて、AIがサイトを自動更新。ヘルプページやオウンドメディアの「情報の食い違い」をなくし、信頼されるサービスへ。",
       cta: "無料で試す",
       trustBadge: "GMO Pepabo運営",
     },
@@ -27,61 +43,61 @@ const translations = {
       title: "イノベーティブなチームに信頼されています",
     },
     problem: {
-      title: "コンテンツ管理の課題",
+      title: "なぜ、手動更新では限界なのか？",
       before: {
-        title: "従来の方法",
-        desc: "手動更新は遅く、エラーが発生しやすい...",
-        points: ["手動でのドキュメント更新", "リンク切れの発見が困難", "ブランド統一性の欠如"],
+        title: "従来の手動更新",
+        desc: "開発スピードに追いつけず、情報は常に古いまま...",
+        points: ["リリースのたびに修正箇所を探すのが手間", "リンク切れや古い表記が放置される", "属人化し、担当者がいないと更新不可"],
       },
       after: {
-        title: "Crollaを使用",
-        desc: "AIが自動的に同期します。",
-        points: ["自動ドキュメント同期", "リアルタイムリンク監視", "ブランド保護機能"],
+        title: "Crollaによる自動化",
+        desc: "開発はアジャイル。コンテンツもアジャイル。",
+        points: ["コードの変更を検知し、ドキュメントを即更新", "AIが代替リンクを探して自動修復", "トーン＆マナーを統一し、ブランドを守る"],
       },
     },
     features: {
       title: "主な機能",
       agile: {
         title: "アジャイル・リライト",
-        desc: "新機能リリースに合わせてドキュメントを自動更新。",
+        desc: "新機能リリースに合わせて、関連する過去記事やLPの記述更新をAIが自動提案。",
       },
       brand: {
         title: "ブランド保護",
-        desc: "企業のトーン＆マナーを守り、表現を統一。",
+        desc: "新人ライターの文章も、AIが「御社らしい」表現に自動統一。表記ゆれもゼロに。",
       },
       competitor: {
-        title: "競合監視",
-        desc: "ライバルサイトの変更をリアルタイム検知。",
+        title: "競合モニタリング",
+        desc: "ライバルサイトの価格変更や新機能をリアルタイムで検知し、通知します。",
       },
     },
     security: {
       title: "エンタープライズ水準のセキュリティ",
-      desc: "お客様のデータとコンテンツを保護します",
+      desc: "お客様のデータとコンテンツを堅牢に保護します",
       features: ["SSO統合", "データ暗号化", "GDPR/APPI準拠", "監査ログ"],
     },
     pricing: {
       title: "料金プラン",
-      desc: "あなたのビジネスに合ったプランを選択",
+      desc: "コスト削減と品質向上を、この価格で。",
       free: {
-        name: "無料",
+        name: "フリー",
         price: "¥0",
         period: "/月",
-        features: ["最大5ページ", "基本的なリンクチェック", "コミュニティサポート"],
-        cta: "始める",
+        features: ["月間1,000ページまで", "基本的なリンク切れ検知", "コミュニティサポート"],
+        cta: "無料で始める",
       },
       pro: {
         name: "プロ",
-        price: "¥49,800",
+        price: "¥9,800",
         period: "/月",
         badge: "人気",
-        features: ["無制限ページ", "AI自動リライト", "ブランド保護", "優先サポート"],
+        features: ["月間50,000ページまで", "AI自動リライト機能", "ブランド保護", "優先サポート"],
         cta: "無料トライアル",
       },
       enterprise: {
         name: "エンタープライズ",
         price: "カスタム",
         period: "",
-        features: ["専用インスタンス", "カスタムAIモデル", "SLA保証", "専任サポート"],
+        features: ["専用インスタンス", "競合モニタリング", "SLA保証", "専任サポート"],
         cta: "お問い合わせ",
       },
     },
@@ -100,9 +116,15 @@ const translations = {
       login: "Login",
     },
     hero: {
-      headline: "Don't let your content lag behind product evolution.",
+      headline: (
+        <>
+          Manual updates are over.
+          <br className="hidden md:block" />
+          Web Content Auto-Sync AI 'Crolla'
+        </>
+      ),
       subheadline:
-        "AI-powered web integrity for the agile era. From fixing broken links to syncing content with updates.",
+        "AI automatically updates your site as your product evolves. Eliminate information discrepancies and build a trusted service.",
       cta: "Try for Free",
       trustBadge: "Operated by GMO Pepabo",
     },
@@ -110,31 +132,31 @@ const translations = {
       title: "Trusted by innovative teams",
     },
     problem: {
-      title: "Content Management Challenges",
+      title: "Why Manual Updates Fail",
       before: {
-        title: "Traditional Way",
-        desc: "Updates are manual & slow...",
-        points: ["Manual documentation updates", "Hard to find broken links", "Lack of brand consistency"],
+        title: "Manual Updates",
+        desc: "Cant keep up with dev speed, content stays outdated...",
+        points: ["Tedious to find updates for every release", "Broken links and old info persist", "Dependent on specific staff"],
       },
       after: {
-        title: "With Crolla",
-        desc: "AI syncs automatically.",
-        points: ["Automatic doc sync", "Real-time link monitoring", "Brand protection"],
+        title: "Automated with Crolla",
+        desc: "Development is Agile. Content is Agile.",
+        points: ["Detects code changes, updates docs instantly", "Auto-repairs broken links with AI", "Unifies tone & manner for branding"],
       },
     },
     features: {
       title: "Key Features",
       agile: {
         title: "Agile Rewrite",
-        desc: "Automatically update docs to match new feature releases.",
+        desc: "Automatically proposes doc updates matching new feature releases.",
       },
       brand: {
         title: "Brand Guardian",
-        desc: "Maintain tone & manner consistency across all content.",
+        desc: "Unifies writing style to match your brand voice automatically.",
       },
       competitor: {
         title: "Competitor Watch",
-        desc: "Real-time monitoring of competitor site changes.",
+        desc: "Real-time monitoring of competitor prices and features.",
       },
     },
     security: {
@@ -144,27 +166,27 @@ const translations = {
     },
     pricing: {
       title: "Pricing Plans",
-      desc: "Choose the plan that fits your business",
+      desc: "Reduce costs and improve quality.",
       free: {
         name: "Free",
         price: "$0",
         period: "/mo",
-        features: ["Up to 5 pages", "Basic link checking", "Community support"],
+        features: ["Up to 1,000 pages", "Basic link checking", "Community support"],
         cta: "Get Started",
       },
       pro: {
         name: "Pro",
-        price: "$399",
+        price: "$65",
         period: "/mo",
         badge: "Popular",
-        features: ["Unlimited pages", "AI auto-rewrite", "Brand protection", "Priority support"],
+        features: ["Up to 50,000 pages", "AI Auto-Rewrite", "Brand Protection", "Priority support"],
         cta: "Start Free Trial",
       },
       enterprise: {
         name: "Enterprise",
         price: "Custom",
         period: "",
-        features: ["Dedicated instance", "Custom AI models", "SLA guarantee", "Dedicated support"],
+        features: ["Dedicated instance", "Competitor Monitoring", "SLA guarantee", "Dedicated support"],
         cta: "Contact Sales",
       },
     },
@@ -186,7 +208,13 @@ export default function CrollaLandingPage() {
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="font-bold text-2xl text-[#0055FF]">Crolla</div>
+          <a href="#" className="block h-10 w-40 relative overflow-hidden group">
+            <img 
+              src="/logo-full.png" 
+              alt="Crolla" 
+              className="absolute inset-0 h-full w-21 object-cover group-hover:opacity-80 transition-opacity"
+            />
+          </a>
 
           <nav className="hidden md:flex items-center gap-6">
             <a href="#features" className="text-sm font-medium text-[#0F172A] hover:text-[#0055FF] transition-colors">
@@ -223,40 +251,68 @@ export default function CrollaLandingPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-white py-20 md:py-32">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-[#0F172A] mb-6 text-balance leading-tight">
-              {t.hero.headline}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-8 text-pretty max-w-3xl mx-auto leading-relaxed">
-              {t.hero.subheadline}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-              <Link href="/login">
-                <Button size="lg" className="bg-[#0055FF] hover:bg-[#0044CC] text-white px-8">
+          {/* PCでは横並び(row)、スマホでは縦並び(col)にするコンテナ */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16">
+            
+            {/* 左側：テキストエリア */}
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-4xl md:text-6xl font-bold text-[#0F172A] mb-6 leading-tight font-feature-settings-palt">
+                {t.hero.headline}
+              </h1>
+              <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0">
+                {t.hero.subheadline}
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-8">
+                <Link href="/login">
+                  <Button size="lg" className="bg-[#0055FF] hover:bg-[#0044CC] text-white px-8 w-full sm:w-auto shadow-lg shadow-blue-500/20">
                     {t.hero.cta}
-                </Button>
-              </Link>
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-500 font-medium">
+                <img src="/pepabo-logo.svg" alt="GMO Pepabo" className="h-5 w-auto opacity-70" /> 
+                <span>{t.hero.trustBadge}</span>
+              </div>
             </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-              <img src="/pepabo-logo.svg" alt="GMO Pepabo" className="h-4 w-auto" />
-              <span>{t.hero.trustBadge}</span>
+
+            {/* 右側：アイソメトリックイラストエリア */}
+            <div className="flex-1 w-full max-w-xl relative">
+              {/* イラストの背景にうっすら光るエフェクトを追加 */}
+              <div className="absolute -inset-4 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+              <img
+                src="/LP_image.png"
+                alt="Crolla Platform Illustration"
+                // 👇 こだわり演出：角丸、影、ホバーでふわっと浮くアニメーション
+                className="w-full h-auto object-contain rounded-2xl shadow-2xl shadow-blue-900/5 hover:-translate-y-2 transition-transform duration-500"
+              />
             </div>
+
           </div>
         </div>
 
-        {/* Decorative mesh */}
+        {/* Decorative mesh (背景の装飾はそのまま維持) */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl -z-10" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-50/40 rounded-full blur-3xl -z-10" />
       </section>
 
-      {/* Social Proof */}
-      <section className="py-12 bg-[#F8FAFC]">
+    {/* Social Proof */}
+      <section className="py-12 bg-[#F8FAFC] border-b border-gray-100">
         <div className="container mx-auto px-4">
-          <p className="text-center text-sm text-gray-500 mb-8">{t.socialProof.title}</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 opacity-40">
+          <p className="text-center text-sm font-medium text-gray-500 mb-8">{t.socialProof.title}</p>
+          
+          {/* ロゴの並びコンテナ */}
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-10 md:gap-x-20">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="text-2xl font-bold text-gray-400">
-                LOGO {i}
+              // 👇 変更点1: 幅指定(w-32など)を削除し、高さを h-16 (64px) にアップ
+              // flex-shrink-0 を追加して、画面が狭くなっても枠が潰れないようにする
+              <div key={i} className="flex items-center justify-center h-16 flex-shrink-0">
+                <img
+                  src={`/company-${i}.svg`}
+                  alt={`Partner Company ${i}`}
+                  // 👇 変更点2: h-full w-auto で、高さに合わせて幅をなりゆきにする
+                  // object-contain で枠内にきれいに収める
+                  className="h-full w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer px-2"
+                />
               </div>
             ))}
           </div>
@@ -477,7 +533,17 @@ export default function CrollaLandingPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="font-bold text-2xl text-[#0055FF] mb-4">Crolla</div>
+              {/* フッターロゴ開始 */}
+              <div className="mb-6">
+                <a href="#" className="block h-20 w-32 relative overflow-hidden group">
+                  <img 
+                    src="/logo-full.png" 
+                    alt="Crolla" 
+                    className="absolute inset-0 h-full w-full object-cover group-hover:opacity-80 transition-opacity"
+                  />
+                </a>
+              </div>
+              {/* フッターロゴ終了 */}
               <p className="text-sm text-gray-600 leading-relaxed">{t.hero.subheadline.split(".")[0]}.</p>
             </div>
             <div>
