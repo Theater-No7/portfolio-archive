@@ -26,6 +26,9 @@
         ],
         "artisan-palette-app": [
           "artisan-palette"
+        ],
+        "crolla": [
+          "crolla"
         ]
       }
     }

@@ -17,6 +17,12 @@
       "target": "artisan-palette-app",
       "public": "artisan-palette-app/public",
       "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+    },
+    {
+      "target": "crolla",
+      "public": "crolla/out",
+      "cleanUrls": true,
+      "trailingSlash": true
     }
   ]
 }
