@@ -19,7 +19,7 @@ const translations = {
     hero: {
       headline: (
         <>
-          手動更新は、もう終わり。
+          手動更新はもう終わり。
           <br className="hidden md:block" />
           Webコンテンツ自動同期AI
           <br className="hidden md:block" />『 
@@ -331,7 +331,7 @@ export default function CrollaLandingPage() {
                 <CardDescription className="text-gray-600">{t.problem.before.desc}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gray-50 rounded-lg mb-4 h-60 flex items-center justify-center text-gray-400 overflow-hidden relative">
+                <div className="bg-gray-50 rounded-lg mb-4 h-80 flex items-center justify-center text-gray-400 overflow-hidden relative">
                     <img src="/before.jpg" alt="Before" className="w-full h-full object-cover" />
                 </div>
                 <ul className="space-y-2">
@@ -352,7 +352,7 @@ export default function CrollaLandingPage() {
                 <CardDescription className="text-gray-600">{t.problem.after.desc}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-blue-50 rounded-lg mb-4 h-60 flex items-center justify-center overflow-hidden relative">
+                <div className="bg-blue-50 rounded-lg mb-4 h-80 flex items-left justify-left overflow-hidden relative">
                     <img src="/after.jpg" alt="After" className="w-full h-full object-cover" />
                 </div>
                 <ul className="space-y-2">
