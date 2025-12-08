@@ -5,6 +5,19 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Shield, Eye, FolderSync as FileSync, Languages, LogIn } from "lucide-react"
 import Link from "next/link"
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from "@/components/ui/accordion"
+import Typewriter from 'typewriter-effect';
+import Marquee from "react-fast-marquee";
+import confetti from 'canvas-confetti';
+import Tilt from 'react-parallax-tilt';
+import { MouseFollower } from "@/components/mouse-follower"
+import { ScrollProgress } from "@/components/scroll-progress"
+import { Loader2, Sparkles } from "lucide-react";
 
 type Language = "jp" | "en"
 
@@ -16,11 +29,22 @@ const translations = {
       security: "セキュリティ",
       login: "ログイン",
     },
-    hero: {
+hero: {
       headline: (
-        <>
-          手動更新はもう終わり。
+        <div className="text-4xl md:text-6xl font-bold text-[#0F172A] mb-6 leading-tight font-feature-settings-palt min-h-[120px] md:min-h-[160px]">
+          手動更新は、
           <br className="hidden md:block" />
+          <span className="text-[#0055FF]">
+            <Typewriter
+              options={{
+                strings: ['面倒。', '遅すぎる。', 'もう終わり。'],
+                autoStart: true,
+                loop: true,
+                delay: 75,
+                deleteSpeed: 50,
+              }}
+            />
+          </span>
           Webコンテンツ自動同期AI
           <br className="hidden md:block" />『 
           {/* 👇 ここからロゴ画像に変更 */}
@@ -31,7 +55,7 @@ const translations = {
               className="absolute inset-0 w-full h-full object-cover" 
             />
           </span>{/* 👆 ここまで */}&nbsp;』
-        </>
+        </div>
       ),
       // 👇 ビジネスメリットを強調したサブコピー
       subheadline:
@@ -74,6 +98,27 @@ const translations = {
       title: "エンタープライズ水準のセキュリティ",
       desc: "お客様のデータとコンテンツを堅牢に保護します",
       features: ["SSO統合", "データ暗号化", "GDPR/APPI準拠", "監査ログ"],
+    },
+    faq: {
+      title: "よくある質問",
+      items: [
+        {
+          question: "既存のCMSと連携できますか？",
+          answer: "はい。WordPress、MicroCMS、Contentfulなど、あらゆるCMSに対応しています。API連携により、記事の更新を検知して自動で修正案を作成します。"
+        },
+        {
+          question: "セキュリティ対策はどうなっていますか？",
+          answer: "通信の暗号化はもちろん、SSO（シングルサインオン）や監査ログ機能を提供しており、エンタープライズ企業様でも安心して導入いただける水準です。"
+        },
+        {
+          question: "AIが誤った情報を書くことはありませんか？",
+          answer: "Crollaは貴社のドキュメントとコードのみを根拠（ソース）とするため、一般的なAIのような「幻覚」は最小限に抑えられます。最終的な公開は必ず担当者の承認を経て行われます。"
+        },
+        {
+          question: "無料トライアル期間はありますか？",
+          answer: "はい、Proプランの全機能を14日間無料でお試しいただけます。クレジットカードの登録も不要ですので、お気軽にお試しください。"
+        }
+      ]
     },
     pricing: {
       title: "料金プラン",
@@ -164,6 +209,27 @@ const translations = {
       desc: "Protecting your data and content",
       features: ["SSO Integration", "Data Encryption", "GDPR/APPI Compliance", "Audit Logs"],
     },
+    faq: {
+      title: "Frequently Asked Questions",
+      items: [
+        {
+          question: "Does it integrate with existing CMS?",
+          answer: "Yes. We support WordPress, MicroCMS, Contentful, and any other headless CMS via API integration."
+        },
+        {
+          question: "How is security handled?",
+          answer: "We provide enterprise-grade security including SSL encryption, SSO support, and audit logs."
+        },
+        {
+          question: "Does the AI produce hallucinations?",
+          answer: "Crolla grounds its answers strictly in your documentation and code, minimizing hallucinations. Human approval is required before publishing."
+        },
+        {
+          question: "Is there a free trial?",
+          answer: "Yes, you can try all Pro features for free for 14 days. No credit card required."
+        }
+      ]
+    },
     pricing: {
       title: "Pricing Plans",
       desc: "Reduce costs and improve quality.",
@@ -201,10 +267,54 @@ const translations = {
 
 export default function CrollaLandingPage() {
   const [lang, setLang] = useState<Language>("jp")
+  // URL解析モック用のState
+  const [url, setUrl] = useState("")
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisComplete, setAnalysisComplete] = useState(false)
+
+  const handleAnalyze = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!url) return
+    setIsAnalyzing(true)
+    setAnalysisComplete(false)
+    
+    // 2秒後に「完了」にする演出
+    setTimeout(() => {
+      setIsAnalyzing(false)
+      setAnalysisComplete(true)
+      triggerConfetti() // せっかくなので紙吹雪も飛ばしちゃいましょう！
+    }, 2000)
+  }
   const t = translations[lang]
+
+  // 紙吹雪を飛ばす関数
+  const triggerConfetti = () => {
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) => {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // ランダムな位置から発射！
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 250);
+  }
 
   return (
     <div className="min-h-screen bg-white">
+      <MouseFollower />
+      <ScrollProgress />
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -254,68 +364,133 @@ export default function CrollaLandingPage() {
           {/* PCでは横並び(row)、スマホでは縦並び(col)にするコンテナ */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16">
             
-            {/* 左側：テキストエリア */}
-            <div className="flex-1 text-center md:text-left">
+            {/* 左側：テキストエリア（フォームを削除してスッキリ） */}
+            <div className="flex-1 text-center md:text-left z-10">
               <h1 className="text-4xl md:text-6xl font-bold text-[#0F172A] mb-6 leading-tight font-feature-settings-palt">
                 {t.hero.headline}
               </h1>
               <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto md:mx-0">
                 {t.hero.subheadline}
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-8">
+              {/* Trust Badge */}
+              <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-500 font-medium mb-8">
+                <img src="/pepabo-logo.svg" alt="GMO Pepabo" className="h-5 w-auto opacity-70" /> 
+                <span>{t.hero.trustBadge}</span>
+              </div>
+              {/* CTAボタン（ここにあっても良いですが、右側のフォームを目立たせるなら削除or控えめにしてもOK。今回は残します） */}
+              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
                 <Link href="/login">
-                  <Button size="lg" className="bg-[#0055FF] hover:bg-[#0044CC] text-white px-8 w-full sm:w-auto shadow-lg shadow-blue-500/20">
+                  <Button 
+                    size="lg" 
+                    className="bg-[#0055FF] hover:bg-[#0044CC] text-white px-8 w-full sm:w-auto shadow-lg shadow-blue-500/20"
+                    onClick={triggerConfetti}
+                  >
                     {t.hero.cta}
                   </Button>
                 </Link>
               </div>
-              <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-500 font-medium">
-                <img src="/pepabo-logo.svg" alt="GMO Pepabo" className="h-5 w-auto opacity-70" /> 
-                <span>{t.hero.trustBadge}</span>
-              </div>
             </div>
 
-            {/* 右側：アイソメトリックイラストエリア */}
-            <div className="flex-1 w-full max-w-xl relative">
-              {/* イラストの背景にうっすら光るエフェクトを追加 */}
-              <div className="absolute -inset-4 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
-              <img
-                src="/LP_image.png"
-                alt="Crolla Platform Illustration"
-                // 👇 こだわり演出：角丸、影、ホバーでふわっと浮くアニメーション
-                className="w-full h-auto object-contain rounded-2xl shadow-2xl shadow-blue-900/5 hover:-translate-y-2 transition-transform duration-500"
-              />
+            {/* 右側：画像 ＋ 重ねて表示する入力フォーム */}
+            <div className="flex-1 w-full max-w-xl relative flex flex-col items-center">
+              
+              {/* 1. イラスト画像 */}
+              <div className="relative z-0 w-full">
+                <div className="absolute -inset-4 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+                <img
+                  src="/LP_image.png"
+                  alt="Crolla Platform Illustration"
+                  className="w-full h-auto object-contain rounded-2xl shadow-lg"
+                />
+              </div>
+
+              {/* 2. 入力フォーム（Glassmorphism Card） */}
+              {/* -mt-12 (PC) / -mt-6 (スマホ) で画像の下部に重ねます */}
+              <div className="w-full max-w-md -mt-6 md:-mt-12 z-20 relative px-4 md:px-0">
+                <div className="bg-white/90 backdrop-blur-md border border-white/20 p-6 rounded-xl shadow-2xl shadow-blue-900/10">
+                  <div className="mb-2 text-sm font-bold text-gray-700 flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-[#0055FF]" />
+                    AIによる自動解析デモ
+                  </div>
+                  
+                  <form onSubmit={handleAnalyze} className="relative flex items-center mb-2">
+                    <div className="relative flex-1">
+                      <input
+                        type="text"
+                        placeholder="https://your-site.com"
+                        className="w-full h-12 pl-4 pr-32 rounded-lg border border-gray-200 focus:border-[#0055FF] focus:ring-2 focus:ring-blue-100 outline-none transition-all bg-white text-[#0F172A]"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        disabled={isAnalyzing || analysisComplete}
+                      />
+                      <div className="absolute right-1 top-1 bottom-1">
+                        <Button 
+                          type="submit" 
+                          size="sm"
+                          className={`h-full px-4 ${analysisComplete ? 'bg-green-500 hover:bg-green-600' : 'bg-[#0F172A] hover:bg-[#1E293B]'} text-white transition-all`}
+                          disabled={isAnalyzing}
+                        >
+                          {isAnalyzing ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : analysisComplete ? (
+                            <span className="flex items-center gap-1">完了</span>
+                          ) : (
+                            "解析"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </form>
+
+                  {/* 解析結果メッセージ */}
+                  <div className={`overflow-hidden transition-all duration-500 ease-out ${analysisComplete ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <div className="bg-green-50 border border-green-100 rounded-lg p-3 flex items-start gap-3 mt-2">
+                      <div className="bg-green-100 p-1 rounded-full mt-0.5">
+                        <CheckCircle2 className="h-3 w-3 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-green-800">3件の更新推奨箇所を検知！</p>
+                        <p className="text-[10px] text-green-600 leading-tight mt-1">
+                          古い価格表記とリンク切れが見つかりました。<br/>
+                          <Link href="/login" className="underline hover:text-green-800 font-medium">詳細レポートを見る →</Link>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
 
           </div>
         </div>
 
-        {/* Decorative mesh (背景の装飾はそのまま維持) */}
+        {/* Decorative mesh */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl -z-10" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-50/40 rounded-full blur-3xl -z-10" />
       </section>
 
-    {/* Social Proof */}
-      <section className="py-12 bg-[#F8FAFC] border-b border-gray-100">
+  {/* Social Proof */}
+      <section className="py-12 bg-[#F8FAFC] border-b border-gray-100 overflow-hidden">
         <div className="container mx-auto px-4">
           <p className="text-center text-sm font-medium text-gray-500 mb-8">{t.socialProof.title}</p>
           
-          {/* ロゴの並びコンテナ */}
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-10 md:gap-x-20">
-            {[1, 2, 3, 4, 5].map((i) => (
-              // 👇 変更点1: 幅指定(w-32など)を削除し、高さを h-16 (64px) にアップ
-              // flex-shrink-0 を追加して、画面が狭くなっても枠が潰れないようにする
-              <div key={i} className="flex items-center justify-center h-16 flex-shrink-0">
-                <img
-                  src={`/company-${i}.svg`}
-                  alt={`Partner Company ${i}`}
-                  // 👇 変更点2: h-full w-auto で、高さに合わせて幅をなりゆきにする
-                  // object-contain で枠内にきれいに収める
-                  className="h-full w-auto object-contain grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer px-2"
-                />
-              </div>
-            ))}
-          </div>
+          {/* 👇 ここでMarqueeコンポーネントを使います */}
+          <Marquee gradient={false} speed={40} pauseOnHover={true}>
+            <div className="flex items-center gap-16 md:gap-24 px-8">
+              {/* ロゴを多めに並べてループ感を出す */}
+              {[1, 2, 3, 4, 5, 1, 2, 3, 4, 5].map((i, index) => (
+                <div key={index} className="flex items-center justify-center h-16 w-32 md:w-40 flex-shrink-0 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-300 cursor-pointer">
+                  <img
+                    src={`/company-${i}.svg`}
+                    alt={`Partner Company ${i}`}
+                    className="h-full w-auto object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+          </Marquee>
         </div>
       </section>
 
@@ -325,7 +500,8 @@ export default function CrollaLandingPage() {
           <h2 className="text-3xl md:text-4xl font-bold text-center text-[#0F172A] mb-12">{t.problem.title}</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Before */}
-            <Card className="border-2 border-gray-200">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000}>
+            <Card className="border-2 border-gray-200 h-full">
               <CardHeader>
                 <CardTitle className="text-xl text-[#0F172A]">{t.problem.before.title}</CardTitle>
                 <CardDescription className="text-gray-600">{t.problem.before.desc}</CardDescription>
@@ -344,9 +520,11 @@ export default function CrollaLandingPage() {
                 </ul>
               </CardContent>
             </Card>
+            </Tilt>
 
             {/* After */}
-            <Card className="border-2 border-[#0055FF] shadow-lg shadow-blue-100">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2000}>
+            <Card className="border-2 border-[#0055FF] shadow-lg shadow-blue-100 h-full">
               <CardHeader>
                 <CardTitle className="text-xl text-[#0055FF]">{t.problem.after.title}</CardTitle>
                 <CardDescription className="text-gray-600">{t.problem.after.desc}</CardDescription>
@@ -365,6 +543,7 @@ export default function CrollaLandingPage() {
                 </ul>
               </CardContent>
             </Card>
+            </Tilt>
           </div>
         </div>
       </section>
@@ -525,6 +704,28 @@ export default function CrollaLandingPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-20 bg-white">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#0F172A] mb-12">
+            {t.faq.title}
+          </h2>
+          
+          <Accordion type="single" collapsible className="w-full">
+            {t.faq.items.map((item: any, i: number) => (
+              <AccordionItem key={i} value={`item-${i}`} className="border-b border-gray-200">
+                <AccordionTrigger className="text-left text-lg font-medium text-[#0F172A] hover:text-[#0055FF] hover:no-underline py-6">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600 leading-relaxed pb-6 text-base">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 

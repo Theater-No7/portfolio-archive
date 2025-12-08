@@ -1,3 +1,5 @@
+"use client"
+
 import { Sidebar } from "@/components/sidebar"
 import { ArticleTable } from "@/components/article-table"
 import { Header } from "@/components/header"
@@ -9,6 +11,7 @@ import {
   TooltipTrigger 
 } from "@/components/ui/tooltip"
 import { Clock, CheckCircle2, ShieldCheck, TrendingUp, Info } from "lucide-react"
+import CountUp from 'react-countup';
 
 export default function DashboardPage() {
   return (
@@ -50,7 +53,10 @@ export default function DashboardPage() {
                   <Clock className="h-4 w-4 text-blue-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-white">128時間</div>
+                  <div className="text-2xl font-bold text-white">
+                    <CountUp end={128} duration={2.5} separator="," />
+                    <span className="text-lg ml-1">時間</span>
+                  </div>
                   <p className="text-xs text-slate-400 mt-1 flex items-center">
                     <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
                     先月比 +12% の効率化
@@ -85,7 +91,10 @@ export default function DashboardPage() {
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-white">45件</div>
+                  <div className="text-2xl font-bold text-white">
+                    <CountUp end={45} duration={2} />
+                    <span className="text-lg ml-1">件</span>
+                  </div>
                   <p className="text-xs text-slate-400 mt-1">
                     リンク切れ・表記ゆれを解決
                   </p>
@@ -119,7 +128,10 @@ export default function DashboardPage() {
                   <ShieldCheck className="h-4 w-4 text-purple-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-white">98%</div>
+                  <div className="text-2xl font-bold text-white">
+                    <CountUp end={98} duration={3} />
+                    <span className="text-lg ml-1">%</span>
+                  </div>
                   <p className="text-xs text-slate-400 mt-1">
                     リスク項目はありません
                   </p>
