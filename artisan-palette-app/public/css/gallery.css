@@ -1,0 +1,52 @@
+.container {
+    max-width: 1200px; /* ギャラリーページは少し幅を広くする */
+}
+.gallery-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ★★★ CSSグリッドでカードを並べる ★★★ */
+#gallery-container {
+    display: grid;
+    /* 画面幅に応じて、1列の最小幅300pxで自動的に列数を調整する */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px; /* カード間の隙間 */
+}
+.loading-text {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+}
+
+/* 作品カードのデザイン */
+.palette-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.palette-preview {
+    display: flex;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.palette-preview div {
+    flex: 1; /* 5つの色を均等な幅にする */
+}
+.palette-card .explanation {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    flex-grow: 1; /* カードの高さを揃えるための魔法 */
+}
+.palette-card .timestamp {
+    font-size: 12px;
+    color: #aaa;
+    text-align: right;
+    margin-top: 15px;
+}

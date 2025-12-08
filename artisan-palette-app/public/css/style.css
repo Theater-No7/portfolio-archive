@@ -1,0 +1,162 @@
+/* === 基本設定とフォント === */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* ユニバーサルセレクタ: 全ての要素に適用する基本スタイル */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* === 全体を囲むカード === */
+.container {
+    width: 100%;
+    max-width: 700px;
+    background-color: #ffffff;
+    padding: 40px 50px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* === ヘッダー === */
+header h1 {
+    font-size: 36px;
+    font-weight: 700;
+}
+header p {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 40px;
+}
+
+/* === 入力エリア === */
+.input-section label {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+#theme-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+}
+#theme-input:focus {
+    outline: none;
+    border-color: #4A90E2;
+}
+#generate-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #4A90E2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#generate-button:hover {
+    background-color: #357ABD;
+}
+#generate-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* === 結果表示エリア === */
+.hidden {
+    display: none; /* 最初は非表示にしておく */
+}
+#result-section {
+    margin-top: 40px;
+    text-align: left;
+}
+#result-section h2, #result-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+#palette-container {
+    display: flex; /* カラーボックスを横並びにする魔法 */
+    justify-content: center; /* 中央に配置 */
+    gap: 15px; /* ボックス間の隙間 */
+    flex-wrap: wrap; /* 画面が狭くなったら折り返す */
+    margin-bottom: 30px;
+}
+.color-box {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+.hex-code {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 700;
+    color: #555;
+}
+#palette-explanation {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+/* ===【追記】カラーアイテムのスタイル === */
+.color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===【追記】ギャラリーへのリンク === */
+.gallery-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 700;
+    color: #4A90E2;
+    text-decoration: none;
+}
+.gallery-link:hover {
+    text-decoration: underline;
+}
+
+/* ===【追記】保存ボタン（サブボタン） === */
+.button-secondary {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 30px; /* 解説文との間に余白を追加 */
+}
+.button-secondary:hover {
+    background-color: #e0e0e0;
+}
+.button-secondary:disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+}

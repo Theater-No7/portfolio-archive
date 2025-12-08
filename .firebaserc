@@ -1,5 +1,37 @@
 {
   "projects": {
-    "default": "nanaban-gekijou"
-  }
+    "default": "theater-no7"
+  },
+  "targets": {
+    "nanaban-gekijou": {
+      "hosting": {
+        "hub": [
+          "nanaban-gekijou"
+        ],
+        "summarizer-app": [
+          "summarizer-app"
+        ],
+        "artisan-palette-app": [
+          "artisan-palette-app"
+        ]
+      }
+    },
+    "theater-no7": {
+      "hosting": {
+        "hub": [
+          "theater-no7"
+        ],
+        "summarizer-app": [
+          "text-ai-summarizer"
+        ],
+        "artisan-palette-app": [
+          "artisan-palette"
+        ],
+        "crolla": [
+          "crolla"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
