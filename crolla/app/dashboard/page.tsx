@@ -70,11 +70,11 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* 自動修正数 */}
+          {/* 修正数 */}
           <Card className="bg-gradient-to-br from-emerald-900/20 to-slate-900 border-emerald-800/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-sm font-medium text-slate-300">自動修正数</CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-300">修正数</CardTitle>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Info className="h-4 w-4 text-slate-500 hover:text-emerald-400 cursor-help" />
@@ -82,7 +82,7 @@ export default function DashboardPage() {
                   <TooltipContent className="bg-slate-900 border-slate-700 text-slate-200 p-3">
                     <p className="font-bold mb-1">解決済みタスク内訳</p>
                     <ul className="list-disc pl-4 text-xs space-y-1">
-                      <li>リンク切れ自動修復: 30件</li>
+                      <li>リンク切れ修復: 30件</li>
                       <li>表記ゆれ統一: 10件</li>
                       <li>アジャイルリライト: 5件</li>
                     </ul>

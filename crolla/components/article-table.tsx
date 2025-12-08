@@ -13,8 +13,9 @@ const articles = [
     title: "Next.js 16の新機能完全ガイド",
     category: "技術",
     lastUpdated: "2024-12-01",
-    status: "good",
-    action: "最新情報です",
+    // 👇 ここを変更：デモ用に「要更新」にします（詳細画面と合わせるため）
+    status: "critical", 
+    action: "リライト推奨", 
   },
   {
     id: "2",
@@ -29,8 +30,9 @@ const articles = [
     title: "TypeScript 5.0移行ガイド",
     category: "技術",
     lastUpdated: "2023-08-20",
-    status: "critical",
-    action: "リライト推奨",
+    // 👇 ここを変更：逆にこちらは「良好」にしておきます
+    status: "good",
+    action: "最新情報です",
   },
   {
     id: "4",
@@ -40,6 +42,7 @@ const articles = [
     status: "good",
     action: "最新情報です",
   },
+  // ... (記事5以降はそのまま)
   {
     id: "5",
     title: "Vercelデプロイメント最適化",

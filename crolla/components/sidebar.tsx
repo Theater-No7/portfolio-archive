@@ -31,11 +31,17 @@ export function Sidebar() {
   return (
     <div className="flex flex-col w-64 bg-slate-950 border-r border-slate-800 text-slate-300 h-full">
       {/* ヘッダーロゴ */}
-      <div className="p-6 flex items-center gap-2">
-        <div className="w-8 h-8 bg-[#0055FF] rounded-lg flex items-center justify-center">
-          <span className="font-bold text-white text-lg">C</span>
-        </div>
-        <span className="font-bold text-xl text-white tracking-tight">ContentFlow</span>
+      <div className="p-6 flex items-center justify-start">
+        <Link 
+          href="/dashboard" 
+          className="block h-19 w-40 relative overflow-hidden group rounded-lg"
+        >
+          <img 
+            src="/logo-full.png" 
+            alt="Crolla" 
+            className="absolute inset-0 h-full w-full object-cover group-hover:opacity-80 transition-opacity" 
+          />
+        </Link>
       </div>
 
       {/* 👇 GSC風ドメインセレクター (ここを追加！) */}
