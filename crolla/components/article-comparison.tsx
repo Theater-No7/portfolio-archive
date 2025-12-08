@@ -1,16 +1,19 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Check, Sparkles } from "lucide-react"
+import { ArrowLeft, Check, Sparkles, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface ArticleComparisonProps {
   articleId: string
 }
 
-// Sample data - in real app this would come from an API
+// Sample data (省略せずそのまま記載します)
 const articleData = {
   "1": {
     title: "Next.js 16の新機能完全ガイド",
@@ -98,28 +101,49 @@ function highlightDifferences(original: string, suggested: string) {
 }
 
 export function ArticleComparison({ articleId }: ArticleComparisonProps) {
+  const router = useRouter()
+  const [isUpdating, setIsUpdating] = useState(false)
+  
   const article = articleData[articleId as keyof typeof articleData] || articleData["1"]
   const { originalHighlighted, suggestedHighlighted } = highlightDifferences(article.original, article.aiSuggestion)
 
+  const handleApply = () => {
+    setIsUpdating(true)
+    
+    // 処理中の演出 (1.5秒)
+    setTimeout(() => {
+      setIsUpdating(false)
+      
+      // 完了トースト
+      toast.success("修正案を適用しました", {
+        description: "GitHubにPull Requestを作成し、承認待ちステータスに更新しました。",
+        icon: <Check className="w-4 h-4 text-emerald-500" />,
+      })
+
+      // 記事一覧に戻る
+      router.push("/dashboard/articles")
+    }, 1500)
+  }
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col bg-slate-950">
       {/* Header */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <div className="border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="p-6 lg:p-8">
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="icon" className="h-9 w-9">
+            <Link href="/dashboard/articles">
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-400 hover:text-white hover:bg-slate-800">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
             </Link>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-2xl font-semibold text-foreground">{article.title}</h1>
-                <Badge variant="outline" className="bg-muted text-muted-foreground border-border">
+                <h1 className="text-2xl font-semibold text-white">{article.title}</h1>
+                <Badge variant="outline" className="bg-slate-800 text-slate-400 border-slate-700">
                   {article.category}
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-slate-400">
                 最終更新:{" "}
                 {new Date(article.lastUpdated).toLocaleDateString("ja-JP", {
                   year: "numeric",
@@ -131,7 +155,7 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
           </div>
 
           <div className="flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <Sparkles className="w-4 h-4" />
               <span className="font-medium">AIが3箇所の更新を検出しました</span>
             </div>
@@ -142,28 +166,26 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
       {/* Comparison View */}
       <div className="flex-1 grid lg:grid-cols-2 gap-6 p-6 lg:p-8 overflow-hidden">
         {/* Original Content */}
-        <Card className="border-border flex flex-col overflow-hidden">
-          <div className="p-4 border-b border-border bg-muted/30">
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
+        <Card className="border-slate-800 bg-slate-900/50 flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-slate-800 bg-slate-900">
+            <h3 className="font-semibold text-slate-200 flex items-center gap-2">
               現在の記事本文
-              <Badge variant="outline" className="text-xs bg-background">
+              <Badge variant="outline" className="text-xs border-slate-700 text-slate-500">
                 オリジナル
               </Badge>
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            {/* proseクラスを削除し、直接フォント設定を適用 */}
-            <div className="text-sm leading-7 text-foreground font-mono">
+            <div className="text-sm leading-7 text-slate-300 font-mono">
               {originalHighlighted.map((item, idx) => (
                 <div
                   key={idx}
                   className={`px-1 ${
                     item.isRemoved
-                      ? "bg-red-100 text-red-700 border-l-4 border-red-500 pl-3 -ml-3 py-1 font-bold block" // 色を濃く、太字に
-                      : "text-muted-foreground"
+                      ? "bg-red-500/10 text-red-400 border-l-4 border-red-500 pl-3 -ml-3 py-1 font-bold block"
+                      : ""
                   }`}
                 >
-                  {/* 空行対策: 内容がない場合は高さを確保 */}
                   {item.line || <span className="inline-block min-h-[1.5em] w-full" />}
                 </div>
               ))}
@@ -172,27 +194,25 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
         </Card>
 
         {/* AI Suggested Content */}
-        <Card className="border-primary/30 flex flex-col overflow-hidden shadow-lg shadow-primary/5">
-          <div className="p-4 border-b border-primary/30 bg-primary/5">
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" />
+        <Card className="border-blue-500/30 bg-slate-900/50 flex flex-col overflow-hidden shadow-lg shadow-blue-900/10">
+          <div className="p-4 border-b border-blue-500/30 bg-blue-500/5">
+            <h3 className="font-semibold text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-blue-400" />
               AIによる修正案
-              <Badge className="text-xs bg-primary text-primary-foreground">推奨</Badge>
+              <Badge className="text-xs bg-blue-500 text-white hover:bg-blue-600 border-0">推奨</Badge>
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            {/* proseクラスを削除し、直接フォント設定を適用 */}
-            <div className="text-sm leading-7 text-foreground font-mono">
+            <div className="text-sm leading-7 text-slate-300 font-mono">
               {suggestedHighlighted.map((item, idx) => (
                 <div
                   key={idx}
                   className={`px-1 ${
                     item.isAdded
-                      ? "bg-green-100 text-green-700 border-l-4 border-green-500 pl-3 -ml-3 py-1 font-bold block" // 色を濃く、太字に
-                      : "text-foreground"
+                      ? "bg-emerald-500/10 text-emerald-400 border-l-4 border-emerald-500 pl-3 -ml-3 py-1 font-bold block"
+                      : ""
                   }`}
                 >
-                  {/* 空行対策 */}
                   {item.line || <span className="inline-block min-h-[1.5em] w-full" />}
                 </div>
               ))}
@@ -202,9 +222,9 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
       </div>
 
       {/* Footer Actions */}
-      <div className="border-t border-border bg-card/50 backdrop-blur-sm p-6 lg:p-8">
+      <div className="border-t border-slate-800 bg-slate-950 p-6 lg:p-8">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-slate-400">
             <span className="inline-flex items-center gap-2">
               <span className="inline-block w-3 h-3 bg-red-500/20 border border-red-500 rounded"></span>
               削除される内容
@@ -216,13 +236,27 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
           </div>
           <div className="flex gap-3">
             <Link href="/dashboard">
-              <Button variant="outline" size="lg">
+              {/* 👇 修正箇所：キャンセルボタンの色を明るく */}
+              <Button variant="outline" size="lg" className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800">
                 キャンセル
               </Button>
             </Link>
-            <Button size="lg" className="gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white">
-              <Check className="w-4 h-4" />
-              修正を適用
+            {/* 👇 修正箇所：適用ロジックを追加 */}
+            <Button 
+              size="lg" 
+              className="gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white min-w-[140px]"
+              onClick={handleApply}
+              disabled={isUpdating}
+            >
+              {isUpdating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> 適用中...
+                </>
+              ) : (
+                <>
+                  <Check className="w-4 h-4" /> 修正を適用
+                </>
+              )}
             </Button>
           </div>
         </div>

@@ -18,6 +18,8 @@ import Tilt from 'react-parallax-tilt';
 import { MouseFollower } from "@/components/mouse-follower"
 import { ScrollProgress } from "@/components/scroll-progress"
 import { Loader2, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { Zap, GitMerge, FileCheck } from "lucide-react"; // アイコン追加
 
 type Language = "jp" | "en"
 
@@ -93,6 +95,23 @@ hero: {
         title: "競合モニタリング",
         desc: "ライバルサイトの価格変更や新機能をリアルタイムで検知し、通知します。",
       },
+    },
+    howTo: {
+      title: "たった3ステップで、自動化を開始",
+      steps: [
+        {
+          title: "連携する",
+          desc: "GitHubやCMSとワンクリックで連携。タグの埋め込みは不要です。",
+        },
+        {
+          title: "解析する",
+          desc: "AIがサイト全体を自動巡回し、古い情報やリンク切れを洗い出します。",
+        },
+        {
+          title: "自動同期",
+          desc: "開発の変更に合わせてドキュメントを自動更新。あなたは承認するだけ。",
+        },
+      ]
     },
     security: {
       title: "エンタープライズ水準のセキュリティ",
@@ -203,6 +222,14 @@ hero: {
         title: "Competitor Watch",
         desc: "Real-time monitoring of competitor prices and features.",
       },
+    },
+    howTo: {
+      title: "Start Automation in 3 Steps",
+      steps: [
+        { title: "Connect", desc: "One-click integration with GitHub & CMS." },
+        { title: "Analyze", desc: "AI scans your site for outdated info & broken links." },
+        { title: "Auto-Sync", desc: "Docs update automatically with code changes." },
+      ]
     },
     security: {
       title: "Enterprise-grade Security",
@@ -591,6 +618,81 @@ export default function CrollaLandingPage() {
                 <p className="text-gray-600 leading-relaxed">{t.features.competitor.desc}</p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+      {/* How it Works Section (Animation) */}
+      <section className="py-24 bg-white overflow-hidden">
+        <div className="container mx-auto px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">{t.howTo.title}</h2>
+            <div className="h-1 w-20 bg-[#0055FF] mx-auto rounded-full" />
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {/* 矢印（PCのみ表示） */}
+            <div className="hidden md:block absolute top-12 left-1/3 w-1/3 border-t-2 border-dashed border-gray-200 -z-10" />
+            <div className="hidden md:block absolute top-12 left-2/3 w-1/3 border-t-2 border-dashed border-gray-200 -z-10" />
+
+            {/* Step 1 */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="relative flex flex-col items-center text-center"
+            >
+              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-xl shadow-blue-100">
+                <GitMerge className="h-10 w-10 text-[#0055FF]" />
+              </div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0055FF] text-white text-xs font-bold px-3 py-1 rounded-full">
+                STEP 1
+              </div>
+              <h3 className="text-xl font-bold text-[#0F172A] mb-3">{t.howTo.steps[0].title}</h3>
+              <p className="text-gray-600 leading-relaxed max-w-xs">{t.howTo.steps[0].desc}</p>
+            </motion.div>
+
+            {/* Step 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="relative flex flex-col items-center text-center"
+            >
+              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-xl shadow-blue-100">
+                <Zap className="h-10 w-10 text-[#0055FF]" />
+              </div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0055FF] text-white text-xs font-bold px-3 py-1 rounded-full">
+                STEP 2
+              </div>
+              <h3 className="text-xl font-bold text-[#0F172A] mb-3">{t.howTo.steps[1].title}</h3>
+              <p className="text-gray-600 leading-relaxed max-w-xs">{t.howTo.steps[1].desc}</p>
+            </motion.div>
+
+            {/* Step 3 */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="relative flex flex-col items-center text-center"
+            >
+              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-xl shadow-blue-100">
+                <FileCheck className="h-10 w-10 text-[#0055FF]" />
+              </div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0055FF] text-white text-xs font-bold px-3 py-1 rounded-full">
+                STEP 3
+              </div>
+              <h3 className="text-xl font-bold text-[#0F172A] mb-3">{t.howTo.steps[2].title}</h3>
+              <p className="text-gray-600 leading-relaxed max-w-xs">{t.howTo.steps[2].desc}</p>
+            </motion.div>
           </div>
         </div>
       </section>

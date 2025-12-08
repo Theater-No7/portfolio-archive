@@ -1,200 +1,326 @@
 "use client"
 
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
-} from "@/components/ui/tooltip"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Clock, CheckCircle2, ShieldCheck, TrendingUp, Info } from "lucide-react"
-import CountUp from 'react-countup'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts'
+import { AlertTriangle, ExternalLink, Github, Activity, GitCommit, ArrowRight, Check, X, Sparkles } from "lucide-react"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner" 
+import { motion, AnimatePresence } from "framer-motion"
+import { IntegrationsModal } from "@/components/integrations-modal" 
 
-// グラフ用ダミーデータ
-const data = [
-  { name: '1月', cost: 40, errors: 24 },
-  { name: '2月', cost: 30, errors: 18 },
-  { name: '3月', cost: 20, errors: 12 },
-  { name: '4月', cost: 27, errors: 9 },
-  { name: '5月', cost: 18, errors: 5 },
-  { name: '6月', cost: 12, errors: 2 },
-];
+// 承認待ちタスクのデータ型
+type Task = {
+  id: string
+  type: "price" | "link" | "brand"
+  title: string
+  desc: string
+  time: string
+  diffOld?: string
+  diffNew?: string
+}
 
 export default function DashboardPage() {
+  // タスクリストの状態管理
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: "1",
+      type: "price",
+      title: "料金プランページの価格更新",
+      desc: "GitHub: feat/new-pricing",
+      time: "2時間前",
+      diffOld: "月額 ¥9,800",
+      diffNew: "月額 ¥12,800"
+    },
+    {
+      id: "2",
+      type: "link",
+      title: "API v1 廃止に伴うリンク削除",
+      desc: "リンク切れ(404)を自動修復",
+      time: "5時間前",
+      diffOld: "/docs/api-v1/intro",
+      diffNew: "/docs/api-v2/intro"
+    },
+    {
+      id: "3",
+      type: "brand",
+      title: "表記ゆれの統一 (20件)",
+      desc: "「引っ越し」に統一",
+      time: "昨日",
+      diffOld: "引越",
+      diffNew: "引っ越し"
+    }
+  ])
+
+  // ランダムメッセージ用のState
+  const [emptyMessage, setEmptyMessage] = useState("")
+
+  // タスクが0になった時にメッセージを決定
+  useEffect(() => {
+    if (tasks.length === 0) {
+      const messages = [
+        "🎉 すべて完了しました！素晴らしい一日を🙌",
+        "🥳 パーフェクトな整合です！Crollaもにっこり✨",
+        "🎉 最高にロックです！バンド組もう🎸"
+      ]
+      setEmptyMessage(messages[Math.floor(Math.random() * messages.length)])
+    }
+  }, [tasks.length])
+
+  // 承認アクション
+  const handleApprove = (id: string) => {
+    toast.success("承認が完了しました！", {
+      description: "本番環境への反映を開始します。",
+      duration: 3000,
+    })
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+  }
+
+  // 却下アクション
+  const handleReject = (id: string) => {
+    toast.info("タスクを却下しました", {
+      description: "開発者にフィードバックを送信しました。",
+    })
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+  }
+
   return (
-    <TooltipProvider delayDuration={300}>
-      <div className="space-y-8">
-        
-        {/* ヘッダーエリア */}
+    <div className="space-y-8">
+      
+      {/* ヘッダーエリア：タイトルと連携ステータス */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">ダッシュボード</h2>
-          <p className="text-slate-400">サイト全体の健全性とROIモニタリング</p>
+          <p className="text-slate-400 text-sm">現在のアクションとサイト状況</p>
         </div>
-
-        {/* 1. ROIウィジェットエリア */}
-        <div className="grid gap-4 md:grid-cols-3">
-          {/* 工数削減 */}
-          <Card className="bg-gradient-to-br from-blue-900/20 to-slate-900 border-blue-800/30">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-sm font-medium text-slate-300">今月の削減工数</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-slate-500 hover:text-blue-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-slate-900 border-slate-700 text-slate-200 p-3">
-                    <p className="font-bold mb-1">工数内訳 (想定)</p>
-                    <ul className="list-disc pl-4 text-xs space-y-1">
-                      <li>監視・検知: 20時間</li>
-                      <li>影響範囲調査: 20時間</li>
-                      <li>執筆・修正作業: 88時間</li>
-                    </ul>
-                    <div className="mt-2 pt-2 border-t border-slate-700 text-xs text-blue-400">
-                      時給3,000円換算で約38.4万円削減
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
+        
+        {/* 連携ステータス & 最新コミット */}
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-3 py-1 bg-slate-900 border border-slate-800 rounded-full">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs text-slate-400 font-medium">Live Syncing</span>
+            </div>
+            <div className="flex -space-x-2">
+              <div className="w-7 h-7 rounded-full bg-[#171515] border-2 border-slate-950 flex items-center justify-center" title="GitHub Connected">
+                <Github className="w-3.5 h-3.5 text-white" />
               </div>
-              <Clock className="h-4 w-4 text-blue-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">
-                <CountUp end={128} duration={2.5} separator="," />
-                <span className="text-lg ml-1">時間</span>
+              <div className="w-7 h-7 rounded-full bg-[#E37400] border-2 border-slate-950 flex items-center justify-center" title="Google Analytics 4 Connected">
+                <span className="text-[9px] font-bold text-white">GA4</span>
               </div>
-              <p className="text-xs text-slate-400 mt-1 flex items-center">
-                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                先月比 +12% の効率化
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* 修正数 */}
-          <Card className="bg-gradient-to-br from-emerald-900/20 to-slate-900 border-emerald-800/30">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-sm font-medium text-slate-300">修正数</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-slate-500 hover:text-emerald-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-slate-900 border-slate-700 text-slate-200 p-3">
-                    <p className="font-bold mb-1">解決済みタスク内訳</p>
-                    <ul className="list-disc pl-4 text-xs space-y-1">
-                      <li>リンク切れ修復: 30件</li>
-                      <li>表記ゆれ統一: 10件</li>
-                      <li>アジャイルリライト: 5件</li>
-                    </ul>
-                  </TooltipContent>
-                </Tooltip>
+              {/* 👇 連携追加ボタン（復活！） */}
+              <div className="ml-2 relative z-10">
+                <IntegrationsModal />
               </div>
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">
-                <CountUp end={45} duration={2} />
-                <span className="text-lg ml-1">件</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">
-                リンク切れ・表記ゆれを解決
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* ブランド整合性 */}
-          <Card className="bg-gradient-to-br from-purple-900/20 to-slate-900 border-purple-800/30">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-sm font-medium text-slate-300">ブランド整合性</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="h-4 w-4 text-slate-500 hover:text-purple-400 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-slate-900 border-slate-700 text-slate-200 p-3">
-                    <p className="font-bold mb-1">スコア算出ロジック</p>
-                    <p className="text-xs mb-2">100点満点からの減点方式</p>
-                    <ul className="list-disc pl-4 text-xs space-y-1">
-                      <li>重大エラー: -5点/件</li>
-                      <li>軽微な警告: -1点/件</li>
-                    </ul>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <ShieldCheck className="h-4 w-4 text-purple-400" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white">
-                <CountUp end={98} duration={3} />
-                <span className="text-lg ml-1">%</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">
-                リスク項目はありません
-              </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-xs font-mono mt-1">
+            <div className="flex items-center gap-1 text-slate-500">
+              <GitCommit className="h-3 w-3" />
+              <span>最新のコミット:</span>
+            </div>
+            <span className="text-blue-400 font-medium">8a2b9f</span>
+            <span className="text-slate-400 max-w-[150px] truncate">feat: 新料金プランの実装</span>
+            <span className="text-slate-600 border-l border-slate-800 pl-2 ml-1">2m ago</span>
+          </div>
         </div>
-
-        {/* 2. 推移グラフエリア (Recharts) */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4 bg-slate-950 border-slate-800">
-            <CardHeader>
-              <CardTitle className="text-white">コスト削減推移</CardTitle>
-              <CardDescription>Crolla導入による月次の人的リソース削減効果</CardDescription>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={data}>
-                    <defs>
-                      <linearGradient id="colorCost" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#0055FF" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#0055FF" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                    <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}h`} />
-                    <RechartsTooltip 
-                      contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
-                      itemStyle={{ color: '#fff' }}
-                    />
-                    <Area type="monotone" dataKey="cost" name="削減時間" stroke="#0055FF" strokeWidth={2} fillOpacity={1} fill="url(#colorCost)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-3 bg-slate-950 border-slate-800">
-            <CardHeader>
-              <CardTitle className="text-white">エラー検出数</CardTitle>
-              <CardDescription>サイト内の問題箇所の減少推移</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={data}>
-                    <defs>
-                      <linearGradient id="colorError" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                    <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                    <RechartsTooltip 
-                      contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
-                    />
-                    <Area type="monotone" dataKey="errors" name="検出エラー" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorError)" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
       </div>
-    </TooltipProvider>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        
+        {/* 1. 承認待ちタスク & オールクリア画面 */}
+        <Card className="bg-slate-950 border-slate-800 flex flex-col relative overflow-hidden min-h-[400px]">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-blue-400" />
+                <CardTitle className="text-white">承認待ち</CardTitle>
+              </div>
+              {tasks.length > 0 && (
+                <Badge variant="outline" className="border-red-500/50 text-red-400 bg-red-500/10 animate-pulse">
+                  残り {tasks.length} 件
+                </Badge>
+              )}
+            </div>
+            <CardDescription className="text-slate-400 text-xs">AIが生成した修正案の確認・承認</CardDescription>
+          </CardHeader>
+          
+          <CardContent className="flex-1 overflow-y-auto pr-2 custom-scrollbar relative">
+            <AnimatePresence mode="popLayout">
+              {tasks.length > 0 ? (
+                // タスクがある場合：リスト表示
+                tasks.map((task) => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: -100, transition: { duration: 0.2 } }}
+                    className="mb-3"
+                  >
+                    <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-800 hover:border-blue-500/30 transition-all group">
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge className={`px-1.5 py-0.5 text-[10px] ${
+                          task.type === "price" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                          task.type === "link" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
+                          "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                        }`}>
+                          {task.type === "price" ? "価格改定" : task.type === "link" ? "リンク修復" : "ブランド"}
+                        </Badge>
+                        <span className="text-xs text-slate-500">{task.time}</span>
+                      </div>
+                      <p className="text-sm text-slate-200 font-medium mb-1">{task.title}</p>
+                      <p className="text-xs text-slate-500 mb-3 flex items-center gap-1 font-mono">
+                        {task.desc}
+                      </p>
+                      
+                      {/* 👇 4. クイック・プレビュー (Quick Diff) */}
+                      <div className="flex gap-2">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <button className="flex-1 bg-[#0055FF] hover:bg-[#0044CC] text-white text-xs py-1.5 rounded font-medium transition-colors flex items-center justify-center gap-1">
+                              確認 <ArrowRight className="h-3 w-3" />
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl">
+                            <DialogHeader>
+                              <DialogTitle>修正案のプレビュー</DialogTitle>
+                              <DialogDescription className="text-slate-400">以下の変更内容を確認してください。</DialogDescription>
+                            </DialogHeader>
+                            {/* 簡易Diffビュー */}
+                            <div className="grid grid-cols-2 gap-4 mt-4 text-sm font-mono bg-slate-900 p-4 rounded-lg border border-slate-800">
+                              <div className="text-red-400 border-r border-slate-800 pr-4">
+                                <p className="text-xs text-slate-500 mb-2">[Current]</p>
+                                {task.diffOld}
+                              </div>
+                              <div className="text-green-400">
+                                <p className="text-xs text-slate-500 mb-2">[New]</p>
+                                {task.diffNew}
+                              </div>
+                            </div>
+                            <DialogFooter className="mt-6">
+                              <Button variant="ghost" className="text-slate-400 hover:text-white" onClick={() => handleReject(task.id)}>却下</Button>
+                              <DialogTrigger asChild>
+                                <Button className="bg-[#0055FF] hover:bg-[#0044CC] text-white" onClick={() => handleApprove(task.id)}>
+                                  <Check className="w-4 h-4 mr-2" /> 承認して反映
+                                </Button>
+                              </DialogTrigger>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                // 👇 3. オールクリア画面 (Empty State)
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center h-full py-12 text-center"
+                >
+                  <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4">
+                    <Sparkles className="h-10 w-10 text-emerald-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">All Clear!</h3>
+                  <p className="text-sm text-slate-400 max-w-[200px] leading-relaxed">
+                    {emptyMessage}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+
+        {/* 2. 緊急対応リスト (High Traffic Risk) */}
+        <Card className="col-span-2 bg-slate-950 border-slate-800 border-l-4 border-l-red-500">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <CardTitle className="text-white">緊急対応が必要なページ</CardTitle>
+            </div>
+            <CardDescription className="text-slate-400">
+              アクセス数が多いにも関わらず、長期間更新されていないページ（ユーザー失望リスク高）
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-slate-800 hover:bg-transparent">
+                  <TableHead className="text-slate-400 h-8 text-xs">ページ / URL</TableHead>
+                  <TableHead className="text-slate-400 h-8 text-xs">月間PV</TableHead>
+                  <TableHead className="text-slate-400 h-8 text-xs">最終更新</TableHead>
+                  <TableHead className="text-slate-400 h-8 text-xs">リスク</TableHead>
+                  <TableHead className="h-8 text-xs"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  {
+                    title: "料金プラン一覧",
+                    url: "/pricing",
+                    pv: "45,200",
+                    updated: "6ヶ月前",
+                    risk: "価格改定未反映の可能性",
+                  },
+                  {
+                    title: "API v2 リファレンス",
+                    url: "/docs/api-v2",
+                    pv: "12,500",
+                    updated: "1年前",
+                    risk: "新機能の記述不足",
+                  },
+                  {
+                    title: "会社概要",
+                    url: "/about",
+                    pv: "8,900",
+                    updated: "2年前",
+                    risk: "役員情報の不一致",
+                  },
+                ].map((item, i) => (
+                  <TableRow key={i} className="border-slate-800 hover:bg-slate-900/50 group">
+                    <TableCell>
+                      <div className="font-medium text-slate-200 text-sm">{item.title}</div>
+                      <div className="text-[10px] text-slate-500">{item.url}</div>
+                    </TableCell>
+                    <TableCell className="text-white font-mono text-sm">{item.pv}</TableCell>
+                    <TableCell className="text-red-400 font-medium text-sm">{item.updated}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="text-red-400 border-red-400/30 bg-red-400/10 text-[10px] px-1">
+                        {item.risk}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <button className="text-xs text-[#0055FF] hover:underline font-medium whitespace-nowrap">
+                        修正案
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+
+    </div>
   )
 }
