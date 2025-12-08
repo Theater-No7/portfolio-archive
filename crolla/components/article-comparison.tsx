@@ -152,17 +152,19 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="prose prose-invert prose-sm max-w-none">
+            {/* proseクラスを削除し、直接フォント設定を適用 */}
+            <div className="text-sm leading-7 text-foreground font-mono">
               {originalHighlighted.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`leading-relaxed ${
+                  className={`px-1 ${
                     item.isRemoved
-                      ? "bg-red-500/10 text-red-200 border-l-2 border-red-500 pl-3 -ml-3 py-0.5"
+                      ? "bg-red-100 text-red-700 border-l-4 border-red-500 pl-3 -ml-3 py-1 font-bold block" // 色を濃く、太字に
                       : "text-muted-foreground"
                   }`}
                 >
-                  {item.line || "\u00A0"}
+                  {/* 空行対策: 内容がない場合は高さを確保 */}
+                  {item.line || <span className="inline-block min-h-[1.5em] w-full" />}
                 </div>
               ))}
             </div>
@@ -179,17 +181,19 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="prose prose-invert prose-sm max-w-none">
+            {/* proseクラスを削除し、直接フォント設定を適用 */}
+            <div className="text-sm leading-7 text-foreground font-mono">
               {suggestedHighlighted.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`leading-relaxed ${
+                  className={`px-1 ${
                     item.isAdded
-                      ? "bg-green-500/10 text-green-200 border-l-2 border-green-500 pl-3 -ml-3 py-0.5"
+                      ? "bg-green-100 text-green-700 border-l-4 border-green-500 pl-3 -ml-3 py-1 font-bold block" // 色を濃く、太字に
                       : "text-foreground"
                   }`}
                 >
-                  {item.line || "\u00A0"}
+                  {/* 空行対策 */}
+                  {item.line || <span className="inline-block min-h-[1.5em] w-full" />}
                 </div>
               ))}
             </div>
@@ -211,10 +215,12 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </span>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" size="lg">
-              キャンセル
-            </Button>
-            <Button size="lg" className="gap-2">
+            <Link href="/dashboard">
+              <Button variant="outline" size="lg">
+                キャンセル
+              </Button>
+            </Link>
+            <Button size="lg" className="gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white">
               <Check className="w-4 h-4" />
               修正を適用
             </Button>

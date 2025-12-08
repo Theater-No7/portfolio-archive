@@ -10,7 +10,7 @@ interface ArticleComparisonProps {
   articleId: string
 }
 
-// Sample data - in real app this would come from an API
+// Sample data
 const articleData = {
   "1": {
     title: "Next.js 16の新機能完全ガイド",
@@ -107,7 +107,7 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
       <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="p-6 lg:p-8">
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="ghost" size="icon" className="h-9 w-9">
                 <ArrowLeft className="w-5 h-5" />
               </Button>
@@ -152,13 +152,14 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="prose prose-invert prose-sm max-w-none">
+            {/* 👇 ここ修正：prose-invert を削除しました */}
+            <div className="prose prose-sm max-w-none text-foreground">
               {originalHighlighted.map((item, idx) => (
                 <div
                   key={idx}
                   className={`leading-relaxed ${
                     item.isRemoved
-                      ? "bg-red-500/10 text-red-200 border-l-2 border-red-500 pl-3 -ml-3 py-0.5"
+                      ? "bg-red-100 !text-red-700 border-l-4 border-red-500 pl-3 -ml-3 py-1 font-medium" 
                       : "text-muted-foreground"
                   }`}
                 >
@@ -179,13 +180,14 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </h3>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="prose prose-invert prose-sm max-w-none">
+            {/* 👇 ここ修正：prose-invert を削除しました */}
+            <div className="prose prose-sm max-w-none text-foreground">
               {suggestedHighlighted.map((item, idx) => (
                 <div
                   key={idx}
                   className={`leading-relaxed ${
                     item.isAdded
-                      ? "bg-green-500/10 text-green-200 border-l-2 border-green-500 pl-3 -ml-3 py-0.5"
+                      ? "bg-green-100 !text-green-700 border-l-4 border-green-500 pl-3 -ml-3 py-1 font-medium"
                       : "text-foreground"
                   }`}
                 >
@@ -211,10 +213,12 @@ export function ArticleComparison({ articleId }: ArticleComparisonProps) {
             </span>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" size="lg">
-              キャンセル
-            </Button>
-            <Button size="lg" className="gap-2">
+            <Link href="/dashboard">
+              <Button variant="outline" size="lg">
+                キャンセル
+              </Button>
+            </Link>
+            <Button size="lg" className="gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white">
               <Check className="w-4 h-4" />
               修正を適用
             </Button>

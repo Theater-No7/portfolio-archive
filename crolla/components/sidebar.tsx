@@ -1,83 +1,100 @@
 "use client"
 
-import { useState } from "react"
-import { FileText, BarChart3, Settings, Users, Bell, ChevronLeft, Sparkles } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { 
+  LayoutDashboard, 
+  FileText, 
+  Settings, 
+  Users, 
+  Bell, 
+  BarChart3, 
+  Globe,
+  ChevronDown,
+  LogOut
+} from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 
-const menuItems = [
-  { icon: FileText, label: "記事一覧", active: true },
-  { icon: BarChart3, label: "ダッシュボード" },
-  { icon: Sparkles, label: "AI分析" },
-  { icon: Users, label: "チーム管理" },
-  { icon: Bell, label: "通知設定" },
-  { icon: Settings, label: "設定" },
+const navigation = [
+  // 👇 順番を変更：ダッシュボードを一番上に
+  { name: "ダッシュボード", href: "/dashboard", icon: LayoutDashboard },
+  { name: "記事一覧", href: "/dashboard/articles", icon: FileText }, // リンク先を変更
+  { name: "AI分析", href: "/dashboard/analytics", icon: BarChart3 },
+  { name: "チーム管理", href: "/dashboard/team", icon: Users },
+  { name: "通知設定", href: "/dashboard/notifications", icon: Bell },
+  { name: "設定", href: "/dashboard/settings", icon: Settings },
 ]
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
+  const pathname = usePathname()
 
   return (
-    <aside
-      className={cn(
-        "bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300",
-        collapsed ? "w-16" : "w-64",
-      )}
-    >
-      {/* Logo */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
-        {!collapsed && (
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <FileText className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-sidebar-foreground text-lg">ContentFlow</span>
-          </div>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setCollapsed(!collapsed)}
-          className="text-sidebar-foreground hover:bg-sidebar-accent"
-        >
-          <ChevronLeft className={cn("w-4 h-4 transition-transform", collapsed && "rotate-180")} />
-        </Button>
+    <div className="flex flex-col w-64 bg-slate-950 border-r border-slate-800 text-slate-300 h-full">
+      {/* ヘッダーロゴ */}
+      <div className="p-6 flex items-center gap-2">
+        <div className="w-8 h-8 bg-[#0055FF] rounded-lg flex items-center justify-center">
+          <span className="font-bold text-white text-lg">C</span>
+        </div>
+        <span className="font-bold text-xl text-white tracking-tight">ContentFlow</span>
       </div>
 
-      {/* Menu Items */}
-      <nav className="flex-1 p-3 space-y-1">
-        {menuItems.map((item) => (
-          <Button
-            key={item.label}
-            variant={item.active ? "default" : "ghost"}
-            className={cn(
-              "w-full justify-start gap-3",
-              item.active
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-              collapsed && "justify-center px-2",
-            )}
-          >
-            <item.icon className="w-5 h-5 shrink-0" />
-            {!collapsed && <span>{item.label}</span>}
-          </Button>
-        ))}
-      </nav>
-
-      {/* User Profile */}
-      <div className="p-4 border-t border-sidebar-border">
-        <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-medium">
-            田
-          </div>
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">田中太郎</p>
-              <p className="text-xs text-sidebar-foreground/60 truncate">admin@example.com</p>
+      {/* 👇 GSC風ドメインセレクター (ここを追加！) */}
+      <div className="px-4 mb-6">
+        <div className="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 flex items-center justify-between cursor-pointer hover:border-slate-700 transition-colors group">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center flex-shrink-0">
+              <Globe className="h-4 w-4 text-slate-400 group-hover:text-[#0055FF] transition-colors" />
             </div>
-          )}
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Current Site</span>
+              <span className="text-sm font-medium text-white truncate">crolla.web.app</span>
+            </div>
+          </div>
+          <ChevronDown className="h-4 w-4 text-slate-500" />
         </div>
       </div>
-    </aside>
+
+      {/* ナビゲーションメニュー */}
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+        {navigation.map((item) => {
+          const isActive = pathname === item.href
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`
+                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? "bg-[#0055FF] text-white shadow-lg shadow-blue-900/20" 
+                  : "hover:bg-slate-900 hover:text-white"
+                }
+              `}
+            >
+              <item.icon className={`h-5 w-5 ${isActive ? "text-white" : "text-slate-400"}`} />
+              {item.name}
+            </Link>
+          )
+        })}
+      </nav>
+
+      {/* フッター（ユーザー情報） */}
+      <div className="p-4 border-t border-slate-800">
+        <div className="flex items-center gap-3 mb-4 px-2">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
+            田中
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white truncate">田中太郎</p>
+            <p className="text-xs text-slate-500 truncate">admin@example.com</p>
+          </div>
+        </div>
+        <Link href="/">
+          <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-950/30 gap-2 pl-2">
+            <LogOut className="h-4 w-4" />
+            ログアウト
+          </Button>
+        </Link>
+      </div>
+    </div>
   )
 }

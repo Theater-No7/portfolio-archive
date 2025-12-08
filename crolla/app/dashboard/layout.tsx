@@ -1,43 +1,27 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+"use client"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+import { Sidebar } from "@/components/sidebar"
+import { Header } from "@/components/header"
 
-export const metadata: Metadata = {
-  title: "ContentFlow - 記事情報の鮮度管理",
-  description: "AI駆動型の記事鮮度管理SaaSダッシュボード",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
-}
-
-export default function RootLayout({
+export default function DashboardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="ja">
-      <body className={`font-sans antialiased`}>
-        {children}
-      </body>
-    </html>
+    <div className="flex h-screen bg-background dark">
+      {/* 1. 常に左にあるサイドバー */}
+      <Sidebar />
+      
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* 2. 常に上にあるヘッダー */}
+        <Header />
+        
+        {/* 3. ページごとに中身が変わるエリア (Main) */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8 bg-slate-950">
+          {children}
+        </main>
+      </div>
+    </div>
   )
 }
