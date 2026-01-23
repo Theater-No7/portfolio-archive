@@ -35,7 +35,7 @@
     🔗 Visit App
   </a>
   <br>
-  <a href="crolla/slide/crolla_slide.pdf" target="_blank" style="display: inline-block; padding: 12px 24px; font-size: 16px; font-weight: bold; color: #41C9B4; background-color: #ffffff; border: 2px solid #41C9B4; border-radius: 25px; text-decoration: none; margin-left: 10px;">
+  <a href="crolla/slide/Crolla_slide.pdf" target="_blank" style="display: inline-block; padding: 12px 24px; font-size: 16px; font-weight: bold; color: #41C9B4; background-color: #ffffff; border: 2px solid #41C9B4; border-radius: 25px; text-decoration: none; margin-left: 10px;">
     📄 View Slide (PDF)
   </a>
 </p>
