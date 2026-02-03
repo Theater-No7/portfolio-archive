@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ffffff;
+    --card: rgba(20, 142, 150, 0.1);
+    --card-foreground: #ffffff;
+    --popover: #0a0a0a;
+    --popover-foreground: #ffffff;
+    --primary: #148E96;
+    --primary-foreground: #ffffff;
+    --secondary: #1a1a1a;
+    --secondary-foreground: #ffffff;
+    --muted: #1a1a1a;
+    --muted-foreground: #a1a1aa;
+    --accent: #5eead4;
+    --accent-foreground: #0a0a0a;
+    --destructive: 0.577 0.245 27.325;
+    /* oklch関数は削除し数値のみにするか、一旦このままで */
+    --destructive-foreground: 0.577 0.245 27.325;
+    --border: rgba(255, 255, 255, 0.1);
+    --input: rgba(255, 255, 255, 0.1);
+    --ring: #148E96;
+    --radius: 0.75rem;
+    --sidebar: #0d0d0d;
+    --sidebar-foreground: #ffffff;
+    --sidebar-primary: #148E96;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: rgba(20, 142, 150, 0.2);
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --sidebar-ring: #148E96;
+    --teal: #148E96;
+    --teal-glow: #5eead4;
+
+    /* チャート用カラー（使う場合） */
+    --chart-1: #148E96;
+    --chart-2: #5eead4;
+    --chart-3: #2662d9;
+    --chart-4: #e23670;
+    --chart-5: #e88c30;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
