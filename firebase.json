@@ -6,23 +6,45 @@
     {
       "target": "hub",
       "public": "hub/public",
-      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     },
     {
       "target": "summarizer-app",
       "public": "summarizer-app/public",
-      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     },
     {
       "target": "artisan-palette-app",
       "public": "artisan-palette-app/public",
-      "rewrites": [ { "source": "**", "destination": "/index.html" } ]
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     },
     {
       "target": "crolla",
       "public": "crolla/out",
       "cleanUrls": true,
-      "trailingSlash": true
+      "trailingSlash": true,
+      "redirects": [
+        {
+          "source": "**",
+          "destination": "https://crolla-app.vercel.app",
+          "type": 301
+        }
+      ]
     }
   ]
 }
